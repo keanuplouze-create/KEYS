@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>StudyHub</title>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -13,7 +16,6 @@ header h1 { font-size: 2em; margin-bottom: 5px; }
 .user-info span { font-weight: bold; }
 .btn-logout { background: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
 .btn-logout:hover { background: #c0392b; }
-.btn-admin { background: #f39c12; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 5px; }
 .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
 .modal.active { display: flex; }
 .modal-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; }
@@ -160,6 +162,14 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
     </footer>
 
     <script>
+        // Service Worker Registration - MUSS ZUERST KOMMEN!
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/KEYS/sw.js').then(reg => {
+                console.log('✅ SW registered');
+                setInterval(() => reg.update(), 5000);
+            }).catch(err => console.log('❌ SW error:', err));
+        }
+
         // Daten im localStorage speichern
         let data = {
             users: {},
@@ -410,32 +420,6 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
                 showApp();
             }
         });
-    </script> 
-        <script>
-    // Service Worker mit Auto-Update
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/KEYS/sw.js').then(registration => {
-            console.log('Service Worker registered');
-            
-            // Jeden Tag nach Updates checken
-            setInterval(() => {
-                registration.update();
-            }, 24 * 60 * 60 * 1000);
-            
-            // Wenn Update verfügbar: Neu laden
-            registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'activated') {
-                        // Neue Version verfügbar
-                        if (confirm('🔄 Neue Version verfügbar! Jetzt laden?')) {
-                            window.location.reload();
-                        }
-                    }
-                });
-            });
-        }).catch(err => console.log('SW registration failed:', err));
-    }
     </script>
 </body>
 </html>
