@@ -4,95 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#667eea">
-    <meta name="description" content="StudyHub - Zusammenarbeit & Live-Chat">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="StudyHub">
     <link rel="manifest" href="manifest.json">
-    <title>StudyHub</title>
+    <title>StudyHub - Ultimate Edition</title>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Arial, sans-serif; background: #f0f0f0; }
-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; }
-header h1 { font-size: 2.5em; margin-bottom: 10px; }
-header p { font-size: 1em; }
-.user-info { background: #2c3e50; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-.user-info span { font-weight: bold; }
-.btn-logout { background: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; }
-.btn-logout:hover { background: #c0392b; }
-.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
+header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+header h1 { font-size: 2.8em; margin-bottom: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.notification-badge { position: fixed; top: 20px; right: 20px; background: #e74c3c; color: white; padding: 10px 15px; border-radius: 50px; z-index: 999; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold; }
+.notification-badge.hidden { display: none; }
+.user-info { background: rgba(0,0,0,0.1); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+.user-info span { font-weight: bold; font-size: 1.1em; }
+.btn-logout { background: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.btn-logout:hover { background: #c0392b; transform: scale(1.05); }
+.btn-admin { background: #f39c12; color: white; padding: 8px 15px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; margin-right: 10px; transition: 0.3s; }
+.btn-admin:hover { background: #e67e22; transform: scale(1.05); }
+.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
 .modal.active { display: flex; }
-.modal-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; }
-.modal-content h2 { margin-bottom: 20px; color: #333; }
-.modal-content input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
-.modal-content button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.modal-content button:hover { background: #764ba2; }
-.modal-toggle { text-align: center; margin-top: 15px; }
-.modal-toggle a { color: #667eea; cursor: pointer; text-decoration: underline; }
-.install-banner { background: #2ecc71; color: white; padding: 15px; text-align: center; display: none; }
-.install-banner.show { display: block; }
-.install-banner button { background: white; color: #2ecc71; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px; }
-nav { background: #2c3e50; display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
-nav button { background: #2c3e50; color: white; border: none; padding: 12px 20px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; font-size: 0.9em; }
-nav button:hover { background: #34495e; }
-nav button.active { background: #3498db; border-bottom: 3px solid #2ecc71; }
-.container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
-.section { display: none; background: white; padding: 20px; margin: 20px auto; border-radius: 8px; }
+.modal-content { background: white; padding: 40px; border-radius: 15px; width: 90%; max-width: 450px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+.modal-content h2 { margin-bottom: 25px; color: #333; font-size: 1.8em; }
+.modal-content input, .modal-content textarea, .modal-content select { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; font-family: Arial, sans-serif; transition: 0.3s; }
+.modal-content input:focus, .modal-content textarea:focus, .modal-content select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 10px #667eea; }
+.modal-content button { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.05em; transition: 0.3s; }
+.modal-content button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+.modal-toggle { text-align: center; margin-top: 15px; color: #666; }
+.modal-toggle a { color: #667eea; cursor: pointer; text-decoration: underline; font-weight: bold; }
+nav { background: rgba(44, 62, 80, 0.95); display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+nav button { background: transparent; color: white; border: none; padding: 15px 20px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; font-size: 0.95em; transition: 0.3s; }
+nav button:hover { background: rgba(255,255,255,0.1); }
+nav button.active { background: #3498db; border-bottom: 3px solid #2ecc71; color: white; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+.section { display: none; background: white; padding: 25px; margin: 25px auto; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .section.active { display: block; }
-.section h2 { color: #333; font-size: 1.8em; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
-.form-box { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #667eea; }
-.form-box h3 { color: #333; margin-bottom: 12px; font-size: 1em; }
-input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; font-family: Arial, sans-serif; }
-textarea { min-height: 80px; resize: vertical; }
-.btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.95em; }
-.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4); }
-.items-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-.item { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #667eea; }
-.item:hover { transform: translateY(-3px); }
-.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.item h3 { color: #333; margin-bottom: 8px; font-size: 1.05em; }
-.item-author { font-size: 0.85em; color: #999; }
-.item p { color: #666; line-height: 1.5; margin-bottom: 10px; font-size: 0.95em; }
-.item-meta { color: #999; font-size: 0.8em; border-top: 1px solid #eee; padding-top: 8px; }
-.chat-box { background: white; border-radius: 8px; display: flex; flex-direction: column; height: 500px; }
-.chat-messages { flex: 1; overflow-y: auto; padding: 15px; background: #f9f9f9; border-radius: 8px 8px 0 0; }
-.message { margin-bottom: 12px; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #667eea; }
-.message.own { border-left: 4px solid #2ecc71; background: #e8f5e9; }
+.section h2 { color: #333; font-size: 2em; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+.form-box { background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%); padding: 20px; border-radius: 10px; margin-bottom: 25px; border-left: 5px solid #667eea; }
+.form-box h3 { color: #333; margin-bottom: 15px; font-size: 1.2em; }
+input[type="text"], input[type="email"], input[type="password"], input[type="file"], input[type="date"], input[type="time"], textarea, select { width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; font-family: Arial, sans-serif; transition: 0.3s; }
+input:focus, textarea:focus, select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 10px rgba(102, 126, 234, 0.2); }
+textarea { min-height: 100px; resize: vertical; }
+.btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1em; transition: 0.3s; }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+.btn-small { padding: 8px 15px; font-size: 0.9em; }
+.btn-danger { background: #e74c3c; }
+.btn-danger:hover { background: #c0392b; }
+.btn-success { background: #27ae60; }
+.btn-success:hover { background: #229954; }
+.btn-warning { background: #f39c12; }
+.btn-warning:hover { background: #e67e22; }
+.items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+.item { background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%); padding: 20px; border-radius: 10px; border-left: 5px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s; }
+.item:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+.item-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
+.item h3 { color: #333; margin-bottom: 8px; font-size: 1.2em; flex: 1; }
+.item-author { font-size: 0.85em; color: #999; background: #f0f0f0; padding: 4px 8px; border-radius: 4px; }
+.item-role { font-size: 0.75em; color: white; background: #667eea; padding: 4px 8px; border-radius: 4px; margin-left: 5px; }
+.item p { color: #666; line-height: 1.6; margin-bottom: 12px; font-size: 0.95em; }
+.item-meta { color: #999; font-size: 0.85em; border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; }
+.item-actions { margin-top: 12px; display: flex; gap: 8px; }
+.item-actions button { flex: 1; padding: 8px; font-size: 0.9em; }
+.chat-box { background: white; border-radius: 10px; display: flex; flex-direction: column; height: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.chat-messages { flex: 1; overflow-y: auto; padding: 20px; background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%); border-radius: 10px 10px 0 0; }
+.message { margin-bottom: 15px; padding: 12px; background: white; border-radius: 8px; border-left: 4px solid #667eea; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.message.own { border-left: 4px solid #2ecc71; background: #e8f5e9; margin-left: 20px; }
 .message-author { font-weight: bold; color: #333; font-size: 0.9em; }
-.message-text { color: #666; margin-top: 5px; }
+.message-text { color: #666; margin-top: 5px; word-wrap: break-word; }
 .message-time { font-size: 0.75em; color: #999; margin-top: 5px; }
-.chat-input { display: flex; gap: 10px; padding: 15px; background: white; border-radius: 0 0 8px 8px; border-top: 1px solid #eee; }
-.chat-input input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95em; }
-.chat-input button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.empty { text-align: center; color: #999; padding: 30px; }
-footer { background: #2c3e50; color: white; text-align: center; padding: 15px; font-size: 0.9em; }
-@media (max-width: 768px) { header h1 { font-size: 1.8em; } nav button { padding: 10px 12px; font-size: 0.8em; } .section { padding: 15px; } .items-list { grid-template-columns: 1fr; } .chat-box { height: 400px; } }
-@media (max-width: 480px) { header { padding: 20px 10px; } header h1 { font-size: 1.5em; } .form-box { padding: 12px; } input, textarea { font-size: 16px; } }
+.chat-input { display: flex; gap: 10px; padding: 15px; background: white; border-radius: 0 0 10px 10px; border-top: 2px solid #eee; }
+.chat-input input { flex: 1; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 0.95em; }
+.chat-input button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.file-preview { margin: 15px 0; padding: 15px; background: #f0f0f0; border-radius: 8px; border: 2px dashed #667eea; }
+.file-preview img { max-width: 100%; max-height: 300px; border-radius: 8px; }
+.task-status { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.85em; font-weight: bold; }
+.task-status.pending { background: #f39c12; color: white; }
+.task-status.done { background: #27ae60; color: white; }
+.task-status.urgent { background: #e74c3c; color: white; }
+.calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+.calendar-day { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea; min-height: 100px; }
+.calendar-day-date { font-weight: bold; color: #667eea; font-size: 1.1em; margin-bottom: 8px; }
+.calendar-event { font-size: 0.9em; color: #666; padding: 5px; background: white; border-radius: 4px; margin-bottom: 5px; }
+.empty { text-align: center; color: #999; padding: 40px; font-size: 1.1em; font-style: italic; }
+.loading { text-align: center; padding: 20px; color: #667eea; font-weight: bold; }
+footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; text-align: center; padding: 20px; font-size: 0.9em; margin-top: 30px; }
+.admin-panel { background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%); padding: 20px; border-radius: 10px; border-left: 5px solid #f39c12; margin-bottom: 20px; }
+.admin-panel h3 { color: #856404; margin-bottom: 15px; }
+.admin-buttons { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+@media (max-width: 768px) { header h1 { font-size: 1.8em; } nav button { padding: 12px 10px; font-size: 0.8em; } .section { padding: 15px; } .items-grid { grid-template-columns: 1fr; } .chat-box { height: 400px; } .item.own { margin-left: 10px; } }
     </style>
 </head>
 <body>
-    <div id="installBanner" class="install-banner">
-        ⬇️ StudyHub als App installieren!
-        <button onclick="installApp()">Installieren</button>
-        <button onclick="closeBanner()" style="background: transparent; color: white;">✕</button>
-    </div>
+    <div id="notificationBadge" class="notification-badge hidden">0 Neue</div>
 
     <div id="authModal" class="modal active">
         <div class="modal-content">
-            <h2 id="authTitle">📚 Willkommen bei StudyHub!</h2>
+            <h2 id="authTitle">📚 StudyHub Ultimate</h2>
             
             <div id="loginForm">
-                <h3>Anmelden</h3>
+                <h3>🔓 Anmelden</h3>
                 <input type="text" id="loginUsername" placeholder="Benutzername">
                 <input type="password" id="loginPassword" placeholder="Passwort">
                 <button onclick="login()">Anmelden</button>
                 <div class="modal-toggle">
-                    Kein Konto? <a onclick="switchToRegister()">Hier registrieren</a>
+                    Noch kein Konto? <a onclick="switchToRegister()">Hier registrieren</a>
                 </div>
             </div>
 
             <div id="registerForm" style="display: none;">
-                <h3>Registrieren</h3>
+                <h3>✍️ Registrieren</h3>
                 <input type="text" id="regUsername" placeholder="Benutzername">
                 <input type="email" id="regEmail" placeholder="E-Mail">
                 <input type="password" id="regPassword" placeholder="Passwort">
@@ -106,153 +124,221 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; f
     </div>
 
     <header>
-        <h1>📚 StudyHub</h1>
-        <p>Zusammenarbeit & Live-Chat mit Klassenkameraden</p>
+        <h1>📚 StudyHub Ultimate Edition</h1>
+        <p>Die komplette Plattform für Schüler - Posts • Dateien • Aufgaben • Kalender</p>
     </header>
 
     <div class="user-info" id="userInfo" style="display: none;">
-        <span>👤 <span id="currentUser"></span></span>
-        <button class="btn-logout" onclick="logout()">Abmelden</button>
+        <span>👤 <span id="currentUser"></span> <span id="userRole" style="font-size: 0.8em; margin-left: 10px;"></span></span>
+        <div>
+            <button class="btn-admin" id="adminBtn" onclick="openAdminPanel()" style="display: none;">⚙️ Admin</button>
+            <button class="btn-logout" onclick="logout()">🚪 Abmelden</button>
+        </div>
     </div>
 
     <nav id="mainNav" style="display: none;">
         <button class="nav-btn active" onclick="showTab('posts', this)">📢 Posts</button>
-        <button class="nav-btn" onclick="showTab('homework', this)">📝 Hausaufgaben</button>
-        <button class="nav-btn" onclick="showTab('chat', this)">💬 Live Chat</button>
-        <button class="nav-btn" onclick="showTab('about', this)">ℹ️ Info</button>
+        <button class="nav-btn" onclick="showTab('files', this)">📁 Dateien</button>
+        <button class="nav-btn" onclick="showTab('chat', this)">💬 Chat</button>
+        <button class="nav-btn" onclick="showTab('tasks', this)">✅ Aufgaben</button>
+        <button class="nav-btn" onclick="showTab('calendar', this)">📅 Kalender</button>
     </nav>
 
     <div class="container" id="mainContent" style="display: none;">
+        <!-- POSTS Section -->
         <section id="posts" class="section active">
-            <h2>📢 Was ist los?</h2>
+            <h2>📢 Posts & Updates</h2>
             <div class="form-box">
                 <h3>Neuen Post erstellen</h3>
-                <input type="text" id="postTitle" placeholder="Worum geht es?">
-                <textarea id="postContent" placeholder="Mehr Details..."></textarea>
+                <input type="text" id="postTitle" placeholder="Titel (max 100 Zeichen)" maxlength="100">
+                <textarea id="postContent" placeholder="Schreib deine Nachricht hier... (max 1000 Zeichen)" maxlength="1000"></textarea>
+                <input type="file" id="postImage" accept="image/*" placeholder="Bild hochladen (Optional)">
+                <div id="postImagePreview" class="file-preview" style="display: none;"></div>
                 <button class="btn" onclick="addPost()">📤 Post teilen</button>
             </div>
-            <div id="postsList" class="items-list">
+            <div id="postsList" class="items-grid">
                 <p class="empty">Noch keine Posts 🎉</p>
             </div>
         </section>
 
-        <section id="homework" class="section">
-            <h2>📝 Hausaufgaben</h2>
+        <!-- FILES Section -->
+        <section id="files" class="section">
+            <h2>📁 Dateien & Ressourcen</h2>
             <div class="form-box">
-                <h3>Hausaufgabe teilen</h3>
-                <input type="text" id="hwSubject" placeholder="Fach">
-                <input type="text" id="hwTitle" placeholder="Titel">
-                <textarea id="hwDescription" placeholder="Beschreibung..."></textarea>
-                <button class="btn" onclick="addHomework()">📤 Teilen</button>
+                <h3>Datei hochladen</h3>
+                <input type="text" id="fileName" placeholder="Dateiname (z.B. Mathe Hausaufgabe)">
+                <input type="file" id="fileUpload" placeholder="Datei auswählen (Bilder, PDF, etc.)">
+                <textarea id="fileDescription" placeholder="Beschreibung..."></textarea>
+                <button class="btn" onclick="uploadFile()">📤 Datei hochladen</button>
             </div>
-            <div id="homeworkList" class="items-list">
-                <p class="empty">Noch keine Hausaufgaben 🎓</p>
+            <div id="filesList" class="items-grid">
+                <p class="empty">Noch keine Dateien hochgeladen 📁</p>
             </div>
         </section>
 
+        <!-- CHAT Section -->
         <section id="chat" class="section">
             <h2>💬 Live Chat</h2>
             <div class="chat-box">
                 <div class="chat-messages" id="chatMessages">
-                    <p class="empty">Noch keine Nachrichten. Sei der Erste!</p>
+                    <p class="empty">Noch keine Nachrichten. Sei der Erste! 👋</p>
                 </div>
                 <div class="chat-input">
                     <input type="text" id="chatInput" placeholder="Schreib eine Nachricht...">
-                    <button onclick="sendMessage()">Senden</button>
+                    <button onclick="sendMessage()">💬 Senden</button>
                 </div>
             </div>
         </section>
 
-        <section id="about" class="section">
-            <h2>ℹ️ Über StudyHub</h2>
-            <p>Willkommen auf StudyHub - der Plattform für Schüler!</p>
-            <ul style="list-style: none; margin: 20px 0; padding: 0 20px;">
-                <li style="padding: 10px 0;">✅ Registriere dich und melde dich an</li>
-                <li style="padding: 10px 0;">✅ Teile Posts und Hausaufgaben</li>
-                <li style="padding: 10px 0;">✅ Chatte live mit deinen Klassenkameraden</li>
-                <li style="padding: 10px 0;">✅ Funktioniert perfekt auf dem Handy!</li>
-                <li style="padding: 10px 0;">✅ Installierbar als App!</li>
-            </ul>
+        <!-- TASKS Section -->
+        <section id="tasks" class="section">
+            <h2>✅ Aufgaben & To-Do Liste</h2>
+            <div class="form-box">
+                <h3>Neue Aufgabe</h3>
+                <input type="text" id="taskTitle" placeholder="Aufgabentitel">
+                <textarea id="taskDesc" placeholder="Beschreibung (was ist zu tun?)"></textarea>
+                <input type="date" id="taskDeadline" placeholder="Deadline">
+                <select id="taskPriority">
+                    <option value="low">⬜ Niedrig</option>
+                    <option value="medium" selected>🟡 Mittel</option>
+                    <option value="high">🔴 Hoch/Dringend</option>
+                </select>
+                <button class="btn" onclick="addTask()">✅ Aufgabe erstellen</button>
+            </div>
+            <div id="tasksList" class="items-grid">
+                <p class="empty">Keine Aufgaben erstellt 📝</p>
+            </div>
+        </section>
+
+        <!-- CALENDAR Section -->
+        <section id="calendar" class="section">
+            <h2>📅 Kalender & Events</h2>
+            <div class="form-box">
+                <h3>Neuer Termin</h3>
+                <input type="text" id="eventTitle" placeholder="Event Titel (z.B. Schulausflug)">
+                <input type="date" id="eventDate">
+                <input type="time" id="eventTime">
+                <textarea id="eventDesc" placeholder="Beschreibung..."></textarea>
+                <select id="eventType">
+                    <option value="event">📌 Event</option>
+                    <option value="exam">📝 Prüfung</option>
+                    <option value="holiday">🎉 Ferien</option>
+                    <option value="deadline">⏰ Deadline</option>
+                </select>
+                <button class="btn" onclick="addEvent()">📅 Event hinzufügen</button>
+            </div>
+            <div id="calendarList" class="calendar-grid">
+                <p class="empty">Keine Events im Kalender 📅</p>
+            </div>
         </section>
     </div>
 
+    <!-- ADMIN PANEL MODAL -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2>⚙️ Admin Panel</h2>
+            
+            <div class="admin-panel">
+                <h3>👥 Benutzer verwalten</h3>
+                <div id="usersList"></div>
+            </div>
+
+            <div class="admin-panel">
+                <h3>🗑️ Inhalte moderieren</h3>
+                <div id="moderationList"></div>
+            </div>
+
+            <button class="btn btn-danger" onclick="closeAdminPanel()">❌ Schließen</button>
+        </div>
+    </div>
+
     <footer id="mainFooter" style="display: none;">
-        <p>© 2026 StudyHub - Zusammenarbeit macht Spaß! 💚</p>
+        <p>© 2026 StudyHub Ultimate - Die beste Plattform für Schüler! 💚✨</p>
     </footer>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => {});
-        }
-
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBanner').classList.add('show');
-        });
-
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt = null;
-                closeBanner();
-            }
-        }
-
-        function closeBanner() {
-            document.getElementById('installBanner').classList.remove('show');
-        }
+        // DEINE GOOGLE SHEET DATEN
+        const SHEET_ID = '1ue30tUYP32JEZh7CHC_T4hneUuG6h_IdFhsys4EgtTQ';
+        const API_KEY = 'AIzaSyCBhlNZ4p1hjx6kTSqhcYl8SpHxO4B8YLA';
 
         let currentUser = null;
-        let users = JSON.parse(localStorage.getItem('studyhub_users')) || {};
-        let posts = JSON.parse(localStorage.getItem('studyhub_posts')) || [];
-        let homeworks = JSON.parse(localStorage.getItem('studyhub_homeworks')) || [];
-        let messages = JSON.parse(localStorage.getItem('studyhub_messages')) || [];
+        let currentRole = 'student';
+        let allData = {
+            users: [],
+            posts: [],
+            files: [],
+            tasks: [],
+            calendar: [],
+            messages: [],
+            notifications: []
+        };
+
+        // Google Sheets API Funktion
+        async function getSheetData(sheetName) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${sheetName}?key=${API_KEY}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data.values || [];
+            } catch (err) {
+                console.error('Fehler beim Laden:', err);
+                return [];
+            }
+        }
 
         function switchToRegister() {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'block';
-            document.getElementById('authTitle').textContent = 'Neues Konto erstellen';
+            document.getElementById('authTitle').textContent = '✍️ Neues Konto';
         }
 
         function switchToLogin() {
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('authTitle').textContent = 'Anmelden';
+            document.getElementById('authTitle').textContent = '📚 StudyHub Ultimate';
         }
 
-        function register() {
+        async function register() {
             const username = document.getElementById('regUsername').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
             const password2 = document.getElementById('regPassword2').value;
 
-            if (!username || !email || !password) { alert('Bitte alle Felder ausfüllen!'); return; }
-            if (password !== password2) { alert('Passwörter stimmen nicht überein!'); return; }
-            if (users[username]) { alert('Benutzername bereits vergeben!'); return; }
+            if (!username || !email || !password) { alert('❌ Bitte alle Felder ausfüllen!'); return; }
+            if (password !== password2) { alert('❌ Passwörter stimmen nicht überein!'); return; }
+            if (allData.users.some(u => u.username === username)) { alert('❌ Benutzername bereits vergeben!'); return; }
 
-            users[username] = { email, password };
-            localStorage.setItem('studyhub_users', JSON.stringify(users));
-            alert('Registrierung erfolgreich! Jetzt anmelden.');
+            allData.users.push({
+                username: username,
+                email: email,
+                password: password,
+                role: 'student',
+                created_at: new Date().toLocaleString('de-DE')
+            });
+
+            alert('✅ Registrierung erfolgreich! Jetzt anmelden.');
             switchToLogin();
         }
 
-        function login() {
+        async function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            if (!username || !password) { alert('Benutzername und Passwort eingeben!'); return; }
-            if (!users[username] || users[username].password !== password) { alert('Benutzername oder Passwort falsch!'); return; }
+            if (!username || !password) { alert('❌ Benutzername und Passwort eingeben!'); return; }
+
+            const user = allData.users.find(u => u.username === username && u.password === password);
+            if (!user) { alert('❌ Benutzername oder Passwort falsch!'); return; }
 
             currentUser = username;
-            localStorage.setItem('studyhub_currentUser', username);
+            currentRole = user.role || 'student';
+            localStorage.setItem('studyhub_user', username);
+            localStorage.setItem('studyhub_role', currentRole);
             showApp();
         }
 
         function logout() {
             currentUser = null;
-            localStorage.removeItem('studyhub_currentUser');
+            localStorage.removeItem('studyhub_user');
             location.reload();
         }
 
@@ -263,7 +349,86 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; f
             document.getElementById('mainContent').style.display = 'block';
             document.getElementById('mainFooter').style.display = 'block';
             document.getElementById('currentUser').textContent = currentUser;
-            refreshMessages();
+            
+            if (currentRole === 'admin') {
+                document.getElementById('adminBtn').style.display = 'block';
+                document.getElementById('userRole').textContent = '👑 ADMIN';
+                document.getElementById('userRole').style.color = '#f39c12';
+            }
+
+            loadAllData();
+        }
+
+        async function loadAllData() {
+            document.getElementById('postsList').innerHTML = '<p class="loading">⏳ Laden...</p>';
+            
+            const usersData = await getSheetData('users');
+            const postsData = await getSheetData('posts');
+            const filesData = await getSheetData('files');
+            const tasksData = await getSheetData('tasks');
+            const calendarData = await getSheetData('calendar');
+            const messagesData = await getSheetData('messages');
+
+            allData.users = usersData.slice(1).map(row => ({
+                username: row[0],
+                email: row[1],
+                password: row[2],
+                role: row[3] || 'student',
+                created_at: row[4]
+            }));
+
+            allData.posts = postsData.slice(1).map((row, idx) => ({
+                id: idx,
+                author: row[0],
+                title: row[1],
+                content: row[2],
+                image_url: row[3] || '',
+                created_at: row[4]
+            }));
+
+            allData.files = filesData.slice(1).map((row, idx) => ({
+                id: idx,
+                author: row[0],
+                name: row[1],
+                type: row[2],
+                size: row[3],
+                file_url: row[4] || '',
+                created_at: row[5]
+            }));
+
+            allData.tasks = tasksData.slice(1).map((row, idx) => ({
+                id: idx,
+                author: row[0],
+                title: row[1],
+                description: row[2],
+                deadline: row[3],
+                status: row[4] || 'pending',
+                priority: row[5] || 'medium',
+                created_at: row[6]
+            }));
+
+            allData.calendar = calendarData.slice(1).map((row, idx) => ({
+                id: idx,
+                title: row[0],
+                date: row[1],
+                time: row[2],
+                description: row[3],
+                type: row[4],
+                created_at: row[5]
+            }));
+
+            allData.messages = messagesData.slice(1).map((row, idx) => ({
+                id: idx,
+                author: row[0],
+                text: row[1],
+                created_at: row[2]
+            }));
+
+            displayPosts();
+            displayFiles();
+            displayMessages();
+            displayTasks();
+            displayCalendar();
         }
 
         function showTab(tabName, btn) {
@@ -271,69 +436,351 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; f
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             btn.classList.add('active');
-            if (tabName === 'chat') refreshMessages();
         }
 
         function addPost() {
             const title = document.getElementById('postTitle').value.trim();
             const content = document.getElementById('postContent').value.trim();
-            if (!title) { alert('Titel eingeben!'); return; }
-            posts.unshift({id: Date.now(), author: currentUser, title, content, date: new Date().toLocaleString('de-DE')});
-            localStorage.setItem('studyhub_posts', JSON.stringify(posts));
+            const imageFile = document.getElementById('postImage').files[0];
+
+            if (!title) { alert('❌ Titel eingeben!'); return; }
+
+            let imageUrl = '';
+            if (imageFile) {
+                imageUrl = URL.createObjectURL(imageFile);
+            }
+
+            allData.posts.unshift({
+                id: Date.now(),
+                author: currentUser,
+                title: title,
+                content: content,
+                image_url: imageUrl,
+                created_at: new Date().toLocaleString('de-DE')
+            });
+
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
+            document.getElementById('postImage').value = '';
+            document.getElementById('postImagePreview').style.display = 'none';
             displayPosts();
+            addNotification(currentUser, `${currentUser} hat einen neuen Post erstellt!`);
         }
 
         function displayPosts() {
             const list = document.getElementById('postsList');
-            if (posts.length === 0) { list.innerHTML = '<p class="empty">Noch keine Posts 🎉</p>'; return; }
-            list.innerHTML = posts.map(p => `<div class="item"><div class="item-header"><h3>${p.title}</h3><span class="item-author">von ${p.author}</span></div><p>${p.content}</p><div class="item-meta">📅 ${p.date}</div></div>`).join('');
+            if (allData.posts.length === 0) {
+                list.innerHTML = '<p class="empty">Noch keine Posts 🎉</p>';
+                return;
+            }
+            list.innerHTML = allData.posts.map(p => `
+                <div class="item">
+                    <div class="item-header">
+                        <h3>${p.title}</h3>
+                        <span class="item-author">${p.author}</span>
+                    </div>
+                    ${p.image_url ? `<div class="file-preview"><img src="${p.image_url}" style="max-width: 100%;"></div>` : ''}
+                    <p>${p.content}</p>
+                    <div class="item-meta">
+                        <span>📅 ${p.created_at}</span>
+                        ${currentRole === 'admin' ? `<button class="btn btn-danger btn-small" onclick="deletePost(${p.id})">🗑️ Löschen</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function addHomework() {
-            const subject = document.getElementById('hwSubject').value.trim();
-            const title = document.getElementById('hwTitle').value.trim();
-            const desc = document.getElementById('hwDescription').value.trim();
-            if (!subject || !title) { alert('Fach und Titel eingeben!'); return; }
-            homeworks.unshift({id: Date.now(), author: currentUser, subject, title, desc, date: new Date().toLocaleString('de-DE')});
-            localStorage.setItem('studyhub_homeworks', JSON.stringify(homeworks));
-            document.getElementById('hwSubject').value = '';
-            document.getElementById('hwTitle').value = '';
-            document.getElementById('hwDescription').value = '';
-            displayHomework();
+        function deletePost(id) {
+            if (confirm('Wirklich löschen?')) {
+                allData.posts = allData.posts.filter(p => p.id !== id);
+                displayPosts();
+            }
         }
 
-        function displayHomework() {
-            const list = document.getElementById('homeworkList');
-            if (homeworks.length === 0) { list.innerHTML = '<p class="empty">Noch keine Hausaufgaben 🎓</p>'; return; }
-            list.innerHTML = homeworks.map(h => `<div class="item"><div class="item-header"><h3>📚 [${h.subject}] ${h.title}</h3><span class="item-author">von ${h.author}</span></div><p>${h.desc}</p><div class="item-meta">📅 ${h.date}</div></div>`).join('');
+        function uploadFile() {
+            const name = document.getElementById('fileName').value.trim();
+            const file = document.getElementById('fileUpload').files[0];
+            const desc = document.getElementById('fileDescription').value.trim();
+
+            if (!name || !file) { alert('❌ Dateiname und Datei eingeben!'); return; }
+
+            const fileUrl = URL.createObjectURL(file);
+            allData.files.unshift({
+                id: Date.now(),
+                author: currentUser,
+                name: name,
+                type: file.type,
+                size: (file.size / 1024).toFixed(2) + ' KB',
+                file_url: fileUrl,
+                description: desc,
+                created_at: new Date().toLocaleString('de-DE')
+            });
+
+            document.getElementById('fileName').value = '';
+            document.getElementById('fileUpload').value = '';
+            document.getElementById('fileDescription').value = '';
+            displayFiles();
+            addNotification(currentUser, `${currentUser} hat eine Datei hochgeladen: ${name}`);
+        }
+
+        function displayFiles() {
+            const list = document.getElementById('filesList');
+            if (allData.files.length === 0) {
+                list.innerHTML = '<p class="empty">Noch keine Dateien hochgeladen 📁</p>';
+                return;
+            }
+            list.innerHTML = allData.files.map(f => `
+                <div class="item">
+                    <div class="item-header">
+                        <h3>📄 ${f.name}</h3>
+                        <span class="item-author">${f.author}</span>
+                    </div>
+                    <p>📊 Größe: ${f.size}</p>
+                    <div class="item-meta">
+                        <span>📅 ${f.created_at}</span>
+                        <a href="${f.file_url}" download="${f.name}" class="btn btn-success btn-small">⬇️ Download</a>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function sendMessage() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text) return;
-            messages.push({id: Date.now(), author: currentUser, text, date: new Date().toLocaleString('de-DE', { hour: '2-digit', minute: '2-digit' })});
-            localStorage.setItem('studyhub_messages', JSON.stringify(messages));
+
+            allData.messages.push({
+                id: Date.now(),
+                author: currentUser,
+                text: text,
+                created_at: new Date().toLocaleString('de-DE', { hour: '2-digit', minute: '2-digit' })
+            });
+
             input.value = '';
-            refreshMessages();
+            displayMessages();
+            addNotification(currentUser, `Neue Nachricht im Chat von ${currentUser}`);
         }
 
-        function refreshMessages() {
+        function displayMessages() {
             const chat = document.getElementById('chatMessages');
-            if (messages.length === 0) { chat.innerHTML = '<p class="empty">Noch keine Nachrichten. Sei der Erste!</p>'; return; }
-            chat.innerHTML = messages.map(m => `<div class="message ${m.author === currentUser ? 'own' : ''}"><div class="message-author">${m.author}</div><div class="message-text">${m.text}</div><div class="message-time">${m.date}</div></div>`).join('');
+            if (allData.messages.length === 0) {
+                chat.innerHTML = '<p class="empty">Noch keine Nachrichten 👋</p>';
+                return;
+            }
+            chat.innerHTML = allData.messages.map(m => `
+                <div class="message ${m.author === currentUser ? 'own' : ''}">
+                    <div class="message-author">${m.author}</div>
+                    <div class="message-text">${m.text}</div>
+                    <div class="message-time">${m.created_at}</div>
+                </div>
+            `).join('');
             chat.scrollTop = chat.scrollHeight;
         }
 
-        window.addEventListener('load', () => {
-            const saved = localStorage.getItem('studyhub_currentUser');
-            if (saved && users[saved]) { currentUser = saved; showApp(); displayPosts(); displayHomework(); }
+        function addTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            const desc = document.getElementById('taskDesc').value.trim();
+            const deadline = document.getElementById('taskDeadline').value;
+            const priority = document.getElementById('taskPriority').value;
+
+            if (!title) { alert('❌ Aufgabentitel eingeben!'); return; }
+
+            allData.tasks.unshift({
+                id: Date.now(),
+                author: currentUser,
+                title: title,
+                description: desc,
+                deadline: deadline,
+                status: 'pending',
+                priority: priority,
+                created_at: new Date().toLocaleString('de-DE')
+            });
+
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDesc').value = '';
+            document.getElementById('taskDeadline').value = '';
+            displayTasks();
+            addNotification(currentUser, `Neue Aufgabe: ${title}`);
+        }
+
+        function displayTasks() {
+            const list = document.getElementById('tasksList');
+            if (allData.tasks.length === 0) {
+                list.innerHTML = '<p class="empty">Keine Aufgaben erstellt 📝</p>';
+                return;
+            }
+            list.innerHTML = allData.tasks.map(t => `
+                <div class="item">
+                    <div class="item-header">
+                        <h3>${t.title}</h3>
+                        <span class="item-author">${t.author}</span>
+                    </div>
+                    <p>${t.description}</p>
+                    <div class="item-meta">
+                        <span>📅 ${t.deadline}</span>
+                        <span class="task-status ${t.priority === 'high' ? 'urgent' : t.priority === 'medium' ? 'pending' : ''}">${t.priority.toUpperCase()}</span>
+                    </div>
+                    <div class="item-actions">
+                        ${t.author === currentUser ? `<button class="btn btn-success btn-small" onclick="completeTask(${t.id})">✅ Erledigt</button>` : ''}
+                        ${currentRole === 'admin' ? `<button class="btn btn-danger btn-small" onclick="deleteTask(${t.id})">🗑️ Löschen</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function completeTask(id) {
+            const task = allData.tasks.find(t => t.id === id);
+            if (task) {
+                task.status = 'done';
+                displayTasks();
+                addNotification(currentUser, `${currentUser} hat eine Aufgabe erledigt!`);
+            }
+        }
+
+        function deleteTask(id) {
+            if (confirm('Wirklich löschen?')) {
+                allData.tasks = allData.tasks.filter(t => t.id !== id);
+                displayTasks();
+            }
+        }
+
+        function addEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const desc = document.getElementById('eventDesc').value.trim();
+            const type = document.getElementById('eventType').value;
+
+            if (!title || !date) { alert('❌ Titel und Datum eingeben!'); return; }
+
+            allData.calendar.unshift({
+                id: Date.now(),
+                title: title,
+                date: date,
+                time: time,
+                description: desc,
+                type: type,
+                created_at: new Date().toLocaleString('de-DE')
+            });
+
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventTime').value = '';
+            document.getElementById('eventDesc').value = '';
+            displayCalendar();
+            addNotification(currentUser, `📅 Neuer Kalender-Eintrag: ${title}`);
+        }
+
+        function displayCalendar() {
+            const list = document.getElementById('calendarList');
+            if (allData.calendar.length === 0) {
+                list.innerHTML = '<p class="empty">Keine Events im Kalender 📅</p>';
+                return;
+            }
+
+            const grouped = {};
+            allData.calendar.forEach(e => {
+                if (!grouped[e.date]) grouped[e.date] = [];
+                grouped[e.date].push(e);
+            });
+
+            list.innerHTML = Object.entries(grouped).map(([date, events]) => `
+                <div class="calendar-day">
+                    <div class="calendar-day-date">${new Date(date).toLocaleDateString('de-DE', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+                    ${events.map(e => `
+                        <div class="calendar-event">
+                            <strong>${e.title}</strong><br>
+                            ${e.time ? `⏰ ${e.time}<br>` : ''}
+                            ${e.description ? `${e.description}` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function addNotification(user, message) {
+            allData.notifications.push({
+                user: user,
+                message: message,
+                read: false,
+                created_at: new Date().toLocaleString('de-DE')
+            });
+            updateNotificationBadge();
+        }
+
+        function updateNotificationBadge() {
+            const unread = allData.notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notificationBadge');
+            if (unread > 0) {
+                badge.textContent = unread + ' Neue';
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function openAdminPanel() {
+            if (currentRole !== 'admin') { alert('❌ Du bist kein Admin!'); return; }
+            
+            const usersList = allData.users.map(u => `
+                <div class="item">
+                    <p><strong>${u.username}</strong> - ${u.email}</p>
+                    <p>Rolle: ${u.role}</p>
+                    <button class="btn btn-warning btn-small" onclick="changeUserRole('${u.username}')">Rolle ändern</button>
+                </div>
+            `).join('');
+
+            document.getElementById('usersList').innerHTML = usersList;
+            document.getElementById('adminModal').classList.add('active');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminModal').classList.remove('active');
+        }
+
+        function changeUserRole(username) {
+            const newRole = prompt('Neue Rolle (student/teacher/admin):');
+            if (newRole) {
+                const user = allData.users.find(u => u.username === username);
+                if (user) {
+                    user.role = newRole;
+                    alert('✅ Rolle geändert!');
+                    openAdminPanel();
+                }
+            }
+        }
+
+        // Preview für Bilder
+        document.addEventListener('change', (e) => {
+            if (e.target.id === 'postImage') {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const preview = document.getElementById('postImagePreview');
+                        preview.innerHTML = `<img src="${event.target.result}" style="max-width: 100%; border-radius: 8px;">`;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
         });
 
-        displayPosts();
-        displayHomework();
+        // Init
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('studyhub_user');
+            if (saved) {
+                currentUser = saved;
+                currentRole = localStorage.getItem('studyhub_role') || 'student';
+                showApp();
+            }
+        });
+
+        // Auto-Refresh alle 3 Sekunden
+        setInterval(() => {
+            if (currentUser) {
+                loadAllData();
+            }
+        }, 3000);
     </script>
 </body>
 </html>
