@@ -2,105 +2,78 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#667eea">
-    <link rel="manifest" href="manifest.json">
-    <title>StudyHub - Ultimate Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub</title>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
-html { scroll-behavior: smooth; }
-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+body { font-family: Arial, sans-serif; background: #f0f0f0; }
+header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
 header h1 { font-size: 2em; margin-bottom: 5px; }
-header p { font-size: 0.9em; }
-.notification-badge { position: fixed; top: 15px; right: 15px; background: #e74c3c; color: white; padding: 8px 12px; border-radius: 50px; z-index: 999; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold; font-size: 0.9em; }
-.notification-badge.hidden { display: none; }
-.user-info { background: rgba(0,0,0,0.1); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-.user-info span { font-weight: bold; font-size: 0.95em; }
-.btn-logout { background: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.9em; }
+.user-info { background: #2c3e50; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.user-info span { font-weight: bold; }
+.btn-logout { background: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
 .btn-logout:hover { background: #c0392b; }
-.btn-admin { background: #f39c12; color: white; padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.9em; margin-right: 5px; }
-.btn-admin:hover { background: #e67e22; }
-.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; padding: 20px 0; }
+.btn-admin { background: #f39c12; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 5px; }
+.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
 .modal.active { display: flex; }
-.modal-content { background: white; padding: 30px 20px; border-radius: 15px; width: 95%; max-width: 450px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-.modal-content h2 { margin-bottom: 20px; color: #333; font-size: 1.6em; }
-.modal-content h3 { font-size: 1.1em; margin-bottom: 10px; }
-.modal-content input, .modal-content textarea, .modal-content select { width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
-.modal-content input:focus, .modal-content textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 10px #667eea; }
-.modal-content button { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.95em; margin-top: 5px; }
-.modal-content button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
-.modal-toggle { text-align: center; margin-top: 12px; color: #666; font-size: 0.9em; }
-.modal-toggle a { color: #667eea; cursor: pointer; text-decoration: underline; font-weight: bold; }
-nav { background: rgba(44, 62, 80, 0.95); display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-nav button { background: transparent; color: white; border: none; padding: 12px 15px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; font-size: 0.85em; transition: 0.3s; }
-nav button:hover { background: rgba(255,255,255,0.1); }
+.modal-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; }
+.modal-content h2 { margin-bottom: 20px; }
+.modal-content input, .modal-content textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
+.modal-content button { width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.modal-content button:hover { background: #764ba2; }
+.modal-toggle { text-align: center; margin-top: 10px; }
+.modal-toggle a { color: #667eea; cursor: pointer; text-decoration: underline; }
+nav { background: #2c3e50; display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+nav button { background: #2c3e50; color: white; border: none; padding: 12px 15px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; }
 nav button.active { background: #3498db; border-bottom: 3px solid #2ecc71; }
-.container { max-width: 1000px; margin: 0 auto; padding: 0 12px; }
-.section { display: none; background: white; padding: 20px; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
+.section { display: none; background: white; padding: 20px; margin: 20px auto; border-radius: 8px; }
 .section.active { display: block; }
-.section h2 { color: #333; font-size: 1.6em; margin-bottom: 15px; border-bottom: 3px solid #667eea; padding-bottom: 8px; }
-.form-box { background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #667eea; }
-.form-box h3 { color: #333; margin-bottom: 12px; font-size: 1em; }
-input, textarea, select { width: 100%; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; font-family: Arial, sans-serif; }
-input:focus, textarea:focus, select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 10px rgba(102, 126, 234, 0.2); }
-textarea { min-height: 80px; resize: vertical; }
-.btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.95em; }
-.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
-.btn-small { padding: 6px 12px; font-size: 0.85em; }
-.btn-danger { background: #e74c3c; }
-.btn-danger:hover { background: #c0392b; }
-.btn-success { background: #27ae60; }
-.btn-success:hover { background: #229954; }
-.items-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-@media (min-width: 600px) { .items-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } }
-.item { background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%); padding: 15px; border-radius: 10px; border-left: 5px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-.item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-.item-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; gap: 8px; }
-.item h3 { color: #333; font-size: 1.1em; flex: 1; }
-.item-author { font-size: 0.8em; color: #999; background: #f0f0f0; padding: 4px 8px; border-radius: 4px; white-space: nowrap; }
-.item p { color: #666; line-height: 1.5; margin-bottom: 10px; font-size: 0.95em; }
+.section h2 { color: #333; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+.form-box { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #667eea; }
+.form-box h3 { color: #333; margin-bottom: 10px; }
+input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
+textarea { min-height: 80px; }
+.btn { background: #667eea; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.btn:hover { background: #764ba2; }
+.items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+@media (max-width: 600px) { .items-grid { grid-template-columns: 1fr; } }
+.item { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #667eea; }
+.item h3 { color: #333; margin-bottom: 8px; }
+.item-author { font-size: 0.85em; color: #999; }
+.item p { color: #666; margin: 10px 0; }
 .item-meta { color: #999; font-size: 0.8em; border-top: 1px solid #eee; padding-top: 8px; }
-.item-actions { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
-.item-actions button { flex: 1; min-width: 80px; }
-.chat-box { background: white; border-radius: 10px; display: flex; flex-direction: column; height: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-@media (max-height: 800px) { .chat-box { height: 350px; } }
-.chat-messages { flex: 1; overflow-y: auto; padding: 15px; background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%); border-radius: 10px 10px 0 0; }
-.message { margin-bottom: 10px; padding: 10px; background: white; border-radius: 8px; border-left: 4px solid #667eea; font-size: 0.95em; }
-.message.own { border-left: 4px solid #2ecc71; background: #e8f5e9; margin-left: 15px; }
-.message-author { font-weight: bold; color: #333; font-size: 0.85em; }
-.message-text { color: #666; margin-top: 4px; word-wrap: break-word; }
-.message-time { font-size: 0.7em; color: #999; margin-top: 4px; }
-.chat-input { display: flex; gap: 8px; padding: 12px; background: white; border-radius: 0 0 10px 10px; border-top: 2px solid #eee; }
-.chat-input input { flex: 1; padding: 8px; border: 2px solid #ddd; border-radius: 8px; font-size: 0.9em; }
-.chat-input button { padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap; }
-.empty { text-align: center; color: #999; padding: 30px 15px; font-size: 1em; }
-.task-status { display: inline-block; padding: 3px 8px; border-radius: 15px; font-size: 0.75em; font-weight: bold; }
-.task-status.high { background: #e74c3c; color: white; }
-.task-status.medium { background: #f39c12; color: white; }
-.task-status.low { background: #95a5a6; color: white; }
-footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; text-align: center; padding: 15px; font-size: 0.85em; }
+.chat-box { display: flex; flex-direction: column; height: 500px; background: white; border-radius: 8px; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 15px; background: #f9f9f9; border-radius: 8px 8px 0 0; }
+.message { margin-bottom: 12px; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #667eea; }
+.message.own { border-left: 4px solid #2ecc71; background: #e8f5e9; }
+.message-author { font-weight: bold; color: #333; }
+.message-text { color: #666; margin-top: 5px; }
+.message-time { font-size: 0.75em; color: #999; margin-top: 5px; }
+.chat-input { display: flex; gap: 10px; padding: 15px; background: white; border-top: 1px solid #eee; border-radius: 0 0 8px 8px; }
+.chat-input input { flex: 1; }
+.chat-input button { width: auto; }
+.empty { text-align: center; color: #999; padding: 40px; }
+footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
     </style>
 </head>
 <body>
-    <div id="notificationBadge" class="notification-badge hidden">0</div>
-
     <div id="authModal" class="modal active">
         <div class="modal-content">
-            <h2 id="authTitle">📚 StudyHub Ultimate</h2>
+            <h2>📚 StudyHub</h2>
             
             <div id="loginForm">
-                <h3>🔓 Anmelden</h3>
+                <h3>Anmelden</h3>
                 <input type="text" id="loginUsername" placeholder="Benutzername">
                 <input type="password" id="loginPassword" placeholder="Passwort">
                 <button onclick="login()">Anmelden</button>
                 <div class="modal-toggle">
-                    Noch kein Konto? <a onclick="switchToRegister()">Registrieren</a>
+                    Kein Konto? <a onclick="switchToRegister()">Registrieren</a>
                 </div>
             </div>
 
             <div id="registerForm" style="display: none;">
-                <h3>✍️ Registrieren</h3>
+                <h3>Registrieren</h3>
                 <input type="text" id="regUsername" placeholder="Benutzername">
                 <input type="email" id="regEmail" placeholder="E-Mail">
                 <input type="password" id="regPassword" placeholder="Passwort">
@@ -115,20 +88,16 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
 
     <header>
         <h1>📚 StudyHub</h1>
-        <p>Posts • Dateien • Chat • Aufgaben • Kalender</p>
+        <p>Posts • Chat • Aufgaben • Kalender</p>
     </header>
 
     <div class="user-info" id="userInfo" style="display: none;">
         <span>👤 <span id="currentUser"></span></span>
-        <div>
-            <button class="btn-admin" id="adminBtn" onclick="openAdminPanel()" style="display: none;">⚙️ Admin</button>
-            <button class="btn-logout" onclick="logout()">🚪 Logout</button>
-        </div>
+        <button class="btn-logout" onclick="logout()">Abmelden</button>
     </div>
 
     <nav id="mainNav" style="display: none;">
         <button class="nav-btn active" onclick="showTab('posts', this)">📢 Posts</button>
-        <button class="nav-btn" onclick="showTab('files', this)">📁 Dateien</button>
         <button class="nav-btn" onclick="showTab('chat', this)">💬 Chat</button>
         <button class="nav-btn" onclick="showTab('tasks', this)">✅ Aufgaben</button>
         <button class="nav-btn" onclick="showTab('calendar', this)">📅 Kalender</button>
@@ -139,24 +108,12 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
         <section id="posts" class="section active">
             <h2>📢 Posts</h2>
             <div class="form-box">
-                <h3>Neuen Post erstellen</h3>
-                <input type="text" id="postTitle" placeholder="Titel" maxlength="100">
-                <textarea id="postContent" placeholder="Deine Nachricht..." maxlength="500"></textarea>
-                <button class="btn" onclick="addPost()">📤 Posten</button>
+                <h3>Neuen Post</h3>
+                <input type="text" id="postTitle" placeholder="Titel">
+                <textarea id="postContent" placeholder="Nachricht"></textarea>
+                <button class="btn" onclick="addPost()">Posten</button>
             </div>
             <div id="postsList" class="items-grid"></div>
-        </section>
-
-        <!-- FILES -->
-        <section id="files" class="section">
-            <h2>📁 Dateien</h2>
-            <div class="form-box">
-                <h3>Datei teilen</h3>
-                <input type="text" id="fileName" placeholder="Dateiname">
-                <textarea id="fileDesc" placeholder="Beschreibung (z.B. Mathe Hausaufgabe)" maxlength="300"></textarea>
-                <button class="btn" onclick="shareFile()">📤 Datei teilen</button>
-            </div>
-            <div id="filesList" class="items-grid"></div>
         </section>
 
         <!-- CHAT -->
@@ -166,7 +123,7 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
                 <div class="chat-messages" id="chatMessages"></div>
                 <div class="chat-input">
                     <input type="text" id="chatInput" placeholder="Nachricht...">
-                    <button onclick="sendMessage()">Send</button>
+                    <button class="btn" onclick="sendMessage()">Send</button>
                 </div>
             </div>
         </section>
@@ -176,15 +133,10 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
             <h2>✅ Aufgaben</h2>
             <div class="form-box">
                 <h3>Neue Aufgabe</h3>
-                <input type="text" id="taskTitle" placeholder="Aufgabentitel">
-                <textarea id="taskDesc" placeholder="Beschreibung" maxlength="300"></textarea>
+                <input type="text" id="taskTitle" placeholder="Titel">
+                <textarea id="taskDesc" placeholder="Beschreibung"></textarea>
                 <input type="date" id="taskDeadline">
-                <select id="taskPriority">
-                    <option value="low">⬜ Niedrig</option>
-                    <option value="medium" selected>🟡 Mittel</option>
-                    <option value="high">🔴 Hoch</option>
-                </select>
-                <button class="btn" onclick="addTask()">✅ Aufgabe</button>
+                <button class="btn" onclick="addTask()">Aufgabe</button>
             </div>
             <div id="tasksList" class="items-grid"></div>
         </section>
@@ -194,54 +146,42 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
             <h2>📅 Kalender</h2>
             <div class="form-box">
                 <h3>Neuer Termin</h3>
-                <input type="text" id="eventTitle" placeholder="Event Titel">
+                <input type="text" id="eventTitle" placeholder="Titel">
                 <input type="date" id="eventDate">
                 <input type="time" id="eventTime">
-                <button class="btn" onclick="addEvent()">📅 Termin</button>
+                <button class="btn" onclick="addEvent()">Termin</button>
             </div>
             <div id="calendarList" class="items-grid"></div>
         </section>
     </div>
 
-    <!-- ADMIN MODAL -->
-    <div id="adminModal" class="modal">
-        <div class="modal-content">
-            <h2>⚙️ Admin Panel</h2>
-            <div id="adminContent"></div>
-            <button class="btn btn-danger" onclick="closeAdminPanel()">Schließen</button>
-        </div>
-    </div>
-
     <footer id="mainFooter" style="display: none;">
-        <p>© 2026 StudyHub - Plattform für Schüler 💚</p>
+        <p>© 2026 StudyHub 💚</p>
     </footer>
 
     <script>
-        let currentUser = null;
-        let currentRole = 'student';
-        let allUsers = {};
-        let allPosts = [];
-        let allFiles = [];
-        let allMessages = [];
-        let allTasks = [];
-        let allEvents = [];
+        // Daten im localStorage speichern
+        let data = {
+            users: {},
+            posts: [],
+            messages: [],
+            tasks: [],
+            events: []
+        };
 
-        function loadFromStorage() {
-            allUsers = JSON.parse(localStorage.getItem('sh_users')) || {};
-            allPosts = JSON.parse(localStorage.getItem('sh_posts')) || [];
-            allFiles = JSON.parse(localStorage.getItem('sh_files')) || [];
-            allMessages = JSON.parse(localStorage.getItem('sh_messages')) || [];
-            allTasks = JSON.parse(localStorage.getItem('sh_tasks')) || [];
-            allEvents = JSON.parse(localStorage.getItem('sh_events')) || [];
+        let currentUser = null;
+
+        // Beim Laden: Daten aus localStorage holen
+        function loadData() {
+            const saved = localStorage.getItem('studyhub_data');
+            if (saved) {
+                data = JSON.parse(saved);
+            }
         }
 
-        function saveToStorage() {
-            localStorage.setItem('sh_users', JSON.stringify(allUsers));
-            localStorage.setItem('sh_posts', JSON.stringify(allPosts));
-            localStorage.setItem('sh_files', JSON.stringify(allFiles));
-            localStorage.setItem('sh_messages', JSON.stringify(allMessages));
-            localStorage.setItem('sh_tasks', JSON.stringify(allTasks));
-            localStorage.setItem('sh_events', JSON.stringify(allEvents));
+        // Daten speichern
+        function saveData() {
+            localStorage.setItem('studyhub_data', JSON.stringify(data));
         }
 
         function switchToRegister() {
@@ -260,13 +200,13 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
             const password = document.getElementById('regPassword').value;
             const password2 = document.getElementById('regPassword2').value;
 
-            if (!username || !email || !password) { alert('❌ Alle Felder füllen!'); return; }
-            if (password !== password2) { alert('❌ Passwörter stimmen nicht!'); return; }
-            if (allUsers[username]) { alert('❌ Benutzername vergeben!'); return; }
+            if (!username || !email || !password) { alert('Alle Felder ausfüllen!'); return; }
+            if (password !== password2) { alert('Passwörter stimmen nicht!'); return; }
+            if (data.users[username]) { alert('Benutzername vergeben!'); return; }
 
-            allUsers[username] = { email, password, role: 'student' };
-            saveToStorage();
-            alert('✅ Registrierung erfolgreich!');
+            data.users[username] = { email, password };
+            saveData();
+            alert('Registrierung erfolgreich!');
             switchToLogin();
         }
 
@@ -274,18 +214,17 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            if (!username || !password) { alert('❌ Eingaben!'); return; }
-            if (!allUsers[username] || allUsers[username].password !== password) { alert('❌ Falsch!'); return; }
+            if (!username || !password) { alert('Benutzername & Passwort!'); return; }
+            if (!data.users[username] || data.users[username].password !== password) { alert('Falsch!'); return; }
 
             currentUser = username;
-            currentRole = allUsers[username].role || 'student';
-            localStorage.setItem('sh_currentUser', username);
+            localStorage.setItem('studyhub_user', username);
             showApp();
         }
 
         function logout() {
             currentUser = null;
-            localStorage.removeItem('sh_currentUser');
+            localStorage.removeItem('studyhub_user');
             location.reload();
         }
 
@@ -296,11 +235,6 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
             document.getElementById('mainContent').style.display = 'block';
             document.getElementById('mainFooter').style.display = 'block';
             document.getElementById('currentUser').textContent = currentUser;
-            
-            if (currentRole === 'admin') {
-                document.getElementById('adminBtn').style.display = 'block';
-            }
-
             refreshAll();
         }
 
@@ -315,9 +249,9 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
             const title = document.getElementById('postTitle').value.trim();
             const content = document.getElementById('postContent').value.trim();
 
-            if (!title) { alert('❌ Titel!'); return; }
+            if (!title) { alert('Titel!'); return; }
 
-            allPosts.unshift({
+            data.posts.unshift({
                 id: Date.now(),
                 author: currentUser,
                 title,
@@ -325,64 +259,26 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
                 date: new Date().toLocaleString('de-DE')
             });
 
-            saveToStorage();
+            saveData();
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
-            displayPosts();
+            refreshPosts();
         }
 
-        function displayPosts() {
+        function refreshPosts() {
             const list = document.getElementById('postsList');
-            if (allPosts.length === 0) {
-                list.innerHTML = '<p class="empty">Keine Posts 📭</p>';
+            if (data.posts.length === 0) {
+                list.innerHTML = '<p class="empty">Keine Posts</p>';
                 return;
             }
-            list.innerHTML = allPosts.map(p => `
+            list.innerHTML = data.posts.map(p => `
                 <div class="item">
-                    <div class="item-header">
+                    <div style="display: flex; justify-content: space-between;">
                         <h3>${p.title}</h3>
                         <span class="item-author">${p.author}</span>
                     </div>
                     <p>${p.content}</p>
                     <div class="item-meta">${p.date}</div>
-                </div>
-            `).join('');
-        }
-
-        function shareFile() {
-            const name = document.getElementById('fileName').value.trim();
-            const desc = document.getElementById('fileDesc').value.trim();
-
-            if (!name) { alert('❌ Dateiname!'); return; }
-
-            allFiles.unshift({
-                id: Date.now(),
-                author: currentUser,
-                name,
-                desc,
-                date: new Date().toLocaleString('de-DE')
-            });
-
-            saveToStorage();
-            document.getElementById('fileName').value = '';
-            document.getElementById('fileDesc').value = '';
-            displayFiles();
-        }
-
-        function displayFiles() {
-            const list = document.getElementById('filesList');
-            if (allFiles.length === 0) {
-                list.innerHTML = '<p class="empty">Keine Dateien 📁</p>';
-                return;
-            }
-            list.innerHTML = allFiles.map(f => `
-                <div class="item">
-                    <div class="item-header">
-                        <h3>📄 ${f.name}</h3>
-                        <span class="item-author">${f.author}</span>
-                    </div>
-                    <p>${f.desc}</p>
-                    <div class="item-meta">${f.date}</div>
                 </div>
             `).join('');
         }
@@ -393,25 +289,25 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
 
             if (!text) return;
 
-            allMessages.push({
+            data.messages.push({
                 id: Date.now(),
                 author: currentUser,
                 text,
                 date: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
             });
 
-            saveToStorage();
+            saveData();
             input.value = '';
-            displayMessages();
+            refreshMessages();
         }
 
-        function displayMessages() {
+        function refreshMessages() {
             const chat = document.getElementById('chatMessages');
-            if (allMessages.length === 0) {
-                chat.innerHTML = '<p class="empty">Noch leer 💬</p>';
+            if (data.messages.length === 0) {
+                chat.innerHTML = '<p class="empty">Keine Nachrichten</p>';
                 return;
             }
-            chat.innerHTML = allMessages.map(m => `
+            chat.innerHTML = data.messages.map(m => `
                 <div class="message ${m.author === currentUser ? 'own' : ''}">
                     <div class="message-author">${m.author}</div>
                     <div class="message-text">${m.text}</div>
@@ -425,57 +321,41 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
             const title = document.getElementById('taskTitle').value.trim();
             const desc = document.getElementById('taskDesc').value.trim();
             const deadline = document.getElementById('taskDeadline').value;
-            const priority = document.getElementById('taskPriority').value;
 
-            if (!title) { alert('❌ Titel!'); return; }
+            if (!title) { alert('Titel!'); return; }
 
-            allTasks.unshift({
+            data.tasks.unshift({
                 id: Date.now(),
                 author: currentUser,
                 title,
                 desc,
                 deadline,
-                priority,
-                status: 'pending',
                 date: new Date().toLocaleString('de-DE')
             });
 
-            saveToStorage();
+            saveData();
             document.getElementById('taskTitle').value = '';
             document.getElementById('taskDesc').value = '';
             document.getElementById('taskDeadline').value = '';
-            displayTasks();
+            refreshTasks();
         }
 
-        function displayTasks() {
+        function refreshTasks() {
             const list = document.getElementById('tasksList');
-            if (allTasks.length === 0) {
-                list.innerHTML = '<p class="empty">Keine Aufgaben 📝</p>';
+            if (data.tasks.length === 0) {
+                list.innerHTML = '<p class="empty">Keine Aufgaben</p>';
                 return;
             }
-            list.innerHTML = allTasks.map(t => `
+            list.innerHTML = data.tasks.map(t => `
                 <div class="item">
-                    <div class="item-header">
+                    <div style="display: flex; justify-content: space-between;">
                         <h3>${t.title}</h3>
                         <span class="item-author">${t.author}</span>
                     </div>
                     <p>${t.desc}</p>
-                    <div class="item-meta">
-                        📅 ${t.deadline || 'Kein Datum'}
-                        <span class="task-status ${t.priority}">${t.priority.toUpperCase()}</span>
-                    </div>
-                    ${t.author === currentUser ? `<button class="btn btn-success btn-small" onclick="completeTask(${t.id})">✅ Fertig</button>` : ''}
+                    <div class="item-meta">📅 ${t.deadline || 'Kein Datum'}</div>
                 </div>
             `).join('');
-        }
-
-        function completeTask(id) {
-            const task = allTasks.find(t => t.id === id);
-            if (task) {
-                task.status = 'done';
-                saveToStorage();
-                displayTasks();
-            }
         }
 
         function addEvent() {
@@ -483,69 +363,50 @@ footer { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: w
             const date = document.getElementById('eventDate').value;
             const time = document.getElementById('eventTime').value;
 
-            if (!title || !date) { alert('❌ Titel & Datum!'); return; }
+            if (!title || !date) { alert('Titel & Datum!'); return; }
 
-            allEvents.unshift({
+            data.events.unshift({
                 id: Date.now(),
                 title,
                 date,
                 time,
-                author: currentUser,
-                addedAt: new Date().toLocaleString('de-DE')
+                author: currentUser
             });
 
-            saveToStorage();
+            saveData();
             document.getElementById('eventTitle').value = '';
             document.getElementById('eventDate').value = '';
             document.getElementById('eventTime').value = '';
-            displayCalendar();
+            refreshCalendar();
         }
 
-        function displayCalendar() {
+        function refreshCalendar() {
             const list = document.getElementById('calendarList');
-            if (allEvents.length === 0) {
-                list.innerHTML = '<p class="empty">Keine Events 📅</p>';
+            if (data.events.length === 0) {
+                list.innerHTML = '<p class="empty">Keine Events</p>';
                 return;
             }
-            list.innerHTML = allEvents.map(e => `
+            list.innerHTML = data.events.map(e => `
                 <div class="item">
                     <h3>📌 ${e.title}</h3>
                     <p>📅 ${e.date} ${e.time ? '⏰ ' + e.time : ''}</p>
-                    <p style="color: #999; font-size: 0.85em;">Von: ${e.author}</p>
+                    <div class="item-meta">Von: ${e.author}</div>
                 </div>
             `).join('');
         }
 
-        function openAdminPanel() {
-            if (currentRole !== 'admin') { alert('❌ Nur Admin!'); return; }
-            
-            let html = '<h3>👥 Benutzer:</h3>';
-            Object.entries(allUsers).forEach(([username, data]) => {
-                html += `<p>${username} - ${data.role}</p>`;
-            });
-
-            document.getElementById('adminContent').innerHTML = html;
-            document.getElementById('adminModal').classList.add('active');
-        }
-
-        function closeAdminPanel() {
-            document.getElementById('adminModal').classList.remove('active');
-        }
-
         function refreshAll() {
-            displayPosts();
-            displayFiles();
-            displayMessages();
-            displayTasks();
-            displayCalendar();
+            refreshPosts();
+            refreshMessages();
+            refreshTasks();
+            refreshCalendar();
         }
 
         window.addEventListener('load', () => {
-            loadFromStorage();
-            const saved = localStorage.getItem('sh_currentUser');
-            if (saved && allUsers[saved]) {
+            loadData();
+            const saved = localStorage.getItem('studyhub_user');
+            if (saved && data.users[saved]) {
                 currentUser = saved;
-                currentRole = allUsers[saved].role || 'student';
                 showApp();
             }
         });
