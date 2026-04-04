@@ -3,49 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyHub</title>
+    <title>StudyHub - Chat & Zusammenarbeit</title>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: Arial, sans-serif; background: #f0f0f0; }
-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 20px; text-align: center; }
-header h1 { font-size: 3em; margin-bottom: 10px; }
-header p { font-size: 1.2em; }
-nav { background: #2c3e50; display: flex; justify-content: center; position: sticky; top: 0; z-index: 100; }
-nav button { background: #2c3e50; color: white; border: none; padding: 15px 30px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; }
+
+header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; }
+header h1 { font-size: 2.5em; margin-bottom: 10px; }
+header p { font-size: 1em; }
+
+.user-info { background: #2c3e50; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+.user-info span { font-weight: bold; }
+.btn-logout { background: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; }
+.btn-logout:hover { background: #c0392b; }
+
+.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+.modal.active { display: flex; }
+.modal-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; }
+.modal-content h2 { margin-bottom: 20px; color: #333; }
+.modal-content input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
+.modal-content button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.modal-content button:hover { background: #764ba2; }
+.modal-toggle { text-align: center; margin-top: 15px; }
+.modal-toggle a { color: #667eea; cursor: pointer; text-decoration: underline; }
+
+nav { background: #2c3e50; display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+nav button { background: #2c3e50; color: white; border: none; padding: 12px 20px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; font-size: 0.9em; }
 nav button:hover { background: #34495e; }
 nav button.active { background: #3498db; border-bottom: 3px solid #2ecc71; }
-.container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
-.section { display: none; background: white; padding: 30px; margin: 30px auto; border-radius: 8px; }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
+
+.section { display: none; background: white; padding: 20px; margin: 20px auto; border-radius: 8px; }
 .section.active { display: block; }
-.section h2 { color: #333; font-size: 2em; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
-.form-box { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #667eea; }
-input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
-textarea { min-height: 100px; resize: vertical; }
-.btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+.section h2 { color: #333; font-size: 1.8em; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+
+.form-box { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #667eea; }
+.form-box h3 { color: #333; margin-bottom: 12px; font-size: 1em; }
+
+input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; font-family: Arial, sans-serif; }
+textarea { min-height: 80px; resize: vertical; }
+
+.btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.95em; }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4); }
-.items-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-.item { background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 5px solid #667eea; }
-.item:hover { transform: translateY(-5px); }
-.item h3 { color: #333; margin-bottom: 10px; }
-.item p { color: #666; line-height: 1.6; margin-bottom: 10px; }
-.item-meta { color: #999; font-size: 0.9em; border-top: 1px solid #eee; padding-top: 10px; }
-.empty { text-align: center; color: #999; padding: 40px; }
-footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
+
+.items-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+.item { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #667eea; }
+.item:hover { transform: translateY(-3px); }
+.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.item h3 { color: #333; margin-bottom: 8px; font-size: 1.05em; }
+.item-author { font-size: 0.85em; color: #999; }
+.item p { color: #666; line-height: 1.5; margin-bottom: 10px; font-size: 0.95em; }
+.item-meta { color: #999; font-size: 0.8em; border-top: 1px solid #eee; padding-top: 8px; }
+
+.chat-box { background: white; border-radius: 8px; display: flex; flex-direction: column; height: 500px; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 15px; background: #f9f9f9; border-radius: 8px 8px 0 0; }
+.message { margin-bottom: 12px; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #667eea; }
+.message.own { border-left: 4px solid #2ecc71; background: #e8f5e9; }
+.message-author { font-weight: bold; color: #333; font-size: 0.9em; }
+.message-text { color: #666; margin-top: 5px; }
+.message-time { font-size: 0.75em; color: #999; margin-top: 5px; }
+
+.chat-input { display: flex; gap: 10px; padding: 15px; background: white; border-radius: 0 0 8px 8px; border-top: 1px solid #eee; }
+.chat-input input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95em; }
+.chat-input button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+.empty { text-align: center; color: #999; padding: 30px; }
+
+footer { background: #2c3e50; color: white; text-align: center; padding: 15px; font-size: 0.9em; }
+
+@media (max-width: 768px) {
+    header h1 { font-size: 1.8em; }
+    nav button { padding: 10px 12px; font-size: 0.8em; }
+    .section { padding: 15px; }
+    .items-list { grid-template-columns: 1fr; }
+    .chat-box { height: 400px; }
+}
+
+@media (max-width: 480px) {
+    header { padding: 20px 10px; }
+    header h1 { font-size: 1.5em; }
+    .form-box { padding: 12px; }
+    input, textarea { font-size: 16px; }
+}
     </style>
 </head>
 <body>
+    <!-- Login/Register Modal -->
+    <div id="authModal" class="modal active">
+        <div class="modal-content">
+            <h2 id="authTitle">📚 Willkommen bei StudyHub!</h2>
+            
+            <div id="loginForm">
+                <h3>Anmelden</h3>
+                <input type="text" id="loginUsername" placeholder="Benutzername">
+                <input type="password" id="loginPassword" placeholder="Passwort">
+                <button onclick="login()">Anmelden</button>
+                <div class="modal-toggle">
+                    Kein Konto? <a onclick="switchToRegister()">Hier registrieren</a>
+                </div>
+            </div>
+
+            <div id="registerForm" style="display: none;">
+                <h3>Registrieren</h3>
+                <input type="text" id="regUsername" placeholder="Benutzername">
+                <input type="email" id="regEmail" placeholder="E-Mail">
+                <input type="password" id="regPassword" placeholder="Passwort">
+                <input type="password" id="regPassword2" placeholder="Passwort wiederholen">
+                <button onclick="register()">Registrieren</button>
+                <div class="modal-toggle">
+                    Bereits registriert? <a onclick="switchToLogin()">Hier anmelden</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
     <header>
         <h1>📚 StudyHub</h1>
-        <p>Teile Hausaufgaben und plane Aktivitäten</p>
+        <p>Zusammenarbeit & Live-Chat mit Klassenkameraden</p>
     </header>
 
-    <nav>
+    <!-- User Info -->
+    <div class="user-info" id="userInfo" style="display: none;">
+        <span>👤 <span id="currentUser"></span></span>
+        <button class="btn-logout" onclick="logout()">Abmelden</button>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="mainNav" style="display: none;">
         <button class="nav-btn active" onclick="showTab('posts', this)">📢 Posts</button>
         <button class="nav-btn" onclick="showTab('homework', this)">📝 Hausaufgaben</button>
-        <button class="nav-btn" onclick="showTab('about', this)">ℹ️ Über uns</button>
+        <button class="nav-btn" onclick="showTab('chat', this)">💬 Live Chat</button>
+        <button class="nav-btn" onclick="showTab('about', this)">ℹ️ Info</button>
     </nav>
 
-    <div class="container">
+    <div class="container" id="mainContent" style="display: none;">
+        <!-- Posts Section -->
         <section id="posts" class="section active">
             <h2>📢 Was ist los?</h2>
             <div class="form-box">
@@ -59,6 +154,7 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
             </div>
         </section>
 
+        <!-- Homework Section -->
         <section id="homework" class="section">
             <h2>📝 Hausaufgaben</h2>
             <div class="form-box">
@@ -73,37 +169,140 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
             </div>
         </section>
 
+        <!-- Chat Section -->
+        <section id="chat" class="section">
+            <h2>💬 Live Chat</h2>
+            <div class="chat-box">
+                <div class="chat-messages" id="chatMessages">
+                    <p class="empty">Noch keine Nachrichten. Sei der Erste!</p>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Schreib eine Nachricht...">
+                    <button onclick="sendMessage()">Senden</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
         <section id="about" class="section">
             <h2>ℹ️ Über StudyHub</h2>
-            <p>Deine Plattform zum Lernen zusammen!</p>
-            <ul style="list-style: none; margin: 20px 0;">
-                <li>✓ Posts erstellen</li>
-                <li>✓ Hausaufgaben teilen</li>
-                <li>✓ Zusammenarbeiten</li>
+            <p>Willkommen auf StudyHub - der Plattform für Schüler!</p>
+            <ul style="list-style: none; margin: 20px 0; padding: 0 20px;">
+                <li style="padding: 10px 0;">✅ Registriere dich und melde dich an</li>
+                <li style="padding: 10px 0;">✅ Teile Posts und Hausaufgaben</li>
+                <li style="padding: 10px 0;">✅ Chatte live mit deinen Klassenkameraden</li>
+                <li style="padding: 10px 0;">✅ Funktioniert perfekt auf dem Handy!</li>
             </ul>
         </section>
     </div>
 
-    <footer>
-        <p>© 2026 StudyHub 💚</p>
+    <footer id="mainFooter" style="display: none;">
+        <p>© 2026 StudyHub - Zusammenarbeit macht Spaß! 💚</p>
     </footer>
 
     <script>
-        let posts = [];
-        let homeworks = [];
+        // Benutzer & Daten
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('studyhub_users')) || {};
+        let posts = JSON.parse(localStorage.getItem('studyhub_posts')) || [];
+        let homeworks = JSON.parse(localStorage.getItem('studyhub_homeworks')) || [];
+        let messages = JSON.parse(localStorage.getItem('studyhub_messages')) || [];
 
+        // Auth-Funktionen
+        function switchToRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('authTitle').textContent = 'Neues Konto erstellen';
+        }
+
+        function switchToLogin() {
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('authTitle').textContent = 'Anmelden';
+        }
+
+        function register() {
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const password2 = document.getElementById('regPassword2').value;
+
+            if (!username || !email || !password) {
+                alert('Bitte alle Felder ausfüllen!');
+                return;
+            }
+            if (password !== password2) {
+                alert('Passwörter stimmen nicht überein!');
+                return;
+            }
+            if (users[username]) {
+                alert('Benutzername bereits vergeben!');
+                return;
+            }
+
+            users[username] = { email, password };
+            localStorage.setItem('studyhub_users', JSON.stringify(users));
+            alert('Registrierung erfolgreich! Jetzt anmelden.');
+            switchToLogin();
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                alert('Benutzername und Passwort eingeben!');
+                return;
+            }
+            if (!users[username] || users[username].password !== password) {
+                alert('Benutzername oder Passwort falsch!');
+                return;
+            }
+
+            currentUser = username;
+            localStorage.setItem('studyhub_currentUser', username);
+            showApp();
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('studyhub_currentUser');
+            location.reload();
+        }
+
+        function showApp() {
+            document.getElementById('authModal').classList.remove('active');
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('mainNav').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('mainFooter').style.display = 'block';
+            document.getElementById('currentUser').textContent = currentUser;
+            refreshMessages();
+        }
+
+        // Tab Funktionen
         function showTab(tabName, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             btn.classList.add('active');
+            if (tabName === 'chat') refreshMessages();
         }
 
+        // Posts
         function addPost() {
-            const title = document.getElementById('postTitle').value;
-            const content = document.getElementById('postContent').value;
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
             if (!title) { alert('Titel eingeben!'); return; }
-            posts.unshift({title, content, date: new Date().toLocaleString('de-DE')});
+            
+            posts.unshift({
+                id: Date.now(),
+                author: currentUser,
+                title,
+                content,
+                date: new Date().toLocaleString('de-DE')
+            });
+            localStorage.setItem('studyhub_posts', JSON.stringify(posts));
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
             displayPosts();
@@ -111,16 +310,38 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
 
         function displayPosts() {
             const list = document.getElementById('postsList');
-            if (posts.length === 0) { list.innerHTML = '<p class="empty">Noch keine Posts 🎉</p>'; return; }
-            list.innerHTML = posts.map(p => `<div class="item"><h3>${p.title}</h3><p>${p.content}</p><div class="item-meta">📅 ${p.date}</div></div>`).join('');
+            if (posts.length === 0) {
+                list.innerHTML = '<p class="empty">Noch keine Posts 🎉</p>';
+                return;
+            }
+            list.innerHTML = posts.map(p => `
+                <div class="item">
+                    <div class="item-header">
+                        <h3>${p.title}</h3>
+                        <span class="item-author">von ${p.author}</span>
+                    </div>
+                    <p>${p.content}</p>
+                    <div class="item-meta">📅 ${p.date}</div>
+                </div>
+            `).join('');
         }
 
+        // Hausaufgaben
         function addHomework() {
-            const subject = document.getElementById('hwSubject').value;
-            const title = document.getElementById('hwTitle').value;
-            const desc = document.getElementById('hwDescription').value;
+            const subject = document.getElementById('hwSubject').value.trim();
+            const title = document.getElementById('hwTitle').value.trim();
+            const desc = document.getElementById('hwDescription').value.trim();
             if (!subject || !title) { alert('Fach und Titel eingeben!'); return; }
-            homeworks.unshift({subject, title, desc, date: new Date().toLocaleString('de-DE')});
+            
+            homeworks.unshift({
+                id: Date.now(),
+                author: currentUser,
+                subject,
+                title,
+                desc,
+                date: new Date().toLocaleString('de-DE')
+            });
+            localStorage.setItem('studyhub_homeworks', JSON.stringify(homeworks));
             document.getElementById('hwSubject').value = '';
             document.getElementById('hwTitle').value = '';
             document.getElementById('hwDescription').value = '';
@@ -129,9 +350,68 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
 
         function displayHomework() {
             const list = document.getElementById('homeworkList');
-            if (homeworks.length === 0) { list.innerHTML = '<p class="empty">Noch keine Hausaufgaben 🎓</p>'; return; }
-            list.innerHTML = homeworks.map(h => `<div class="item"><h3>📚 [${h.subject}] ${h.title}</h3><p>${h.desc}</p><div class="item-meta">📅 ${h.date}</div></div>`).join('');
+            if (homeworks.length === 0) {
+                list.innerHTML = '<p class="empty">Noch keine Hausaufgaben 🎓</p>';
+                return;
+            }
+            list.innerHTML = homeworks.map(h => `
+                <div class="item">
+                    <div class="item-header">
+                        <h3>📚 [${h.subject}] ${h.title}</h3>
+                        <span class="item-author">von ${h.author}</span>
+                    </div>
+                    <p>${h.desc}</p>
+                    <div class="item-meta">📅 ${h.date}</div>
+                </div>
+            `).join('');
         }
+
+        // Chat
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            messages.push({
+                id: Date.now(),
+                author: currentUser,
+                text,
+                date: new Date().toLocaleString('de-DE', { hour: '2-digit', minute: '2-digit' })
+            });
+            localStorage.setItem('studyhub_messages', JSON.stringify(messages));
+            input.value = '';
+            refreshMessages();
+        }
+
+        function refreshMessages() {
+            const chat = document.getElementById('chatMessages');
+            if (messages.length === 0) {
+                chat.innerHTML = '<p class="empty">Noch keine Nachrichten. Sei der Erste!</p>';
+                return;
+            }
+            chat.innerHTML = messages.map(m => `
+                <div class="message ${m.author === currentUser ? 'own' : ''}">
+                    <div class="message-author">${m.author}</div>
+                    <div class="message-text">${m.text}</div>
+                    <div class="message-time">${m.date}</div>
+                </div>
+            `).join('');
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // Init
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('studyhub_currentUser');
+            if (saved && users[saved]) {
+                currentUser = saved;
+                showApp();
+                displayPosts();
+                displayHomework();
+            }
+        });
+
+        displayPosts();
+        displayHomework();
     </script>
 </body>
 </html>
