@@ -410,6 +410,32 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
                 showApp();
             }
         });
+    </script> 
+        <script>
+    // Service Worker mit Auto-Update
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/KEYS/sw.js').then(registration => {
+            console.log('Service Worker registered');
+            
+            // Jeden Tag nach Updates checken
+            setInterval(() => {
+                registration.update();
+            }, 24 * 60 * 60 * 1000);
+            
+            // Wenn Update verfügbar: Neu laden
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'activated') {
+                        // Neue Version verfügbar
+                        if (confirm('🔄 Neue Version verfügbar! Jetzt laden?')) {
+                            window.location.reload();
+                        }
+                    }
+                });
+            });
+        }).catch(err => console.log('SW registration failed:', err));
+    }
     </script>
 </body>
 </html>
