@@ -1,79 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyHub - Student Collaboration</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>StudyHub</title>
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background: #f0f0f0; }
+header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 20px; text-align: center; }
+header h1 { font-size: 3em; margin-bottom: 10px; }
+header p { font-size: 1.2em; }
+nav { background: #2c3e50; display: flex; justify-content: center; position: sticky; top: 0; z-index: 100; }
+nav button { background: #2c3e50; color: white; border: none; padding: 15px 30px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; }
+nav button:hover { background: #34495e; }
+nav button.active { background: #3498db; border-bottom: 3px solid #2ecc71; }
+.container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+.section { display: none; background: white; padding: 30px; margin: 30px auto; border-radius: 8px; }
+.section.active { display: block; }
+.section h2 { color: #333; font-size: 2em; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+.form-box { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #667eea; }
+input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
+textarea { min-height: 100px; resize: vertical; }
+.btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4); }
+.items-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.item { background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 5px solid #667eea; }
+.item:hover { transform: translateY(-5px); }
+.item h3 { color: #333; margin-bottom: 10px; }
+.item p { color: #666; line-height: 1.6; margin-bottom: 10px; }
+.item-meta { color: #999; font-size: 0.9em; border-top: 1px solid #eee; padding-top: 10px; }
+.empty { text-align: center; color: #999; padding: 40px; }
+footer { background: #2c3e50; color: white; text-align: center; padding: 20px; }
+    </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>📚 StudyHub</h1>
-            <p>Share homework and plan activities with classmates</p>
-        </div>
+        <h1>📚 StudyHub</h1>
+        <p>Teile Hausaufgaben und plane Aktivitäten</p>
     </header>
 
-    <nav class="navbar">
-        <div class="container">
-            <a href="#" onclick="showSection('posts'); return false;">📢 Posts</a>
-            <a href="#" onclick="showSection('homework'); return false;">📝 Homework</a>
-            <a href="#" onclick="showSection('about'); return false;">ℹ️ About</a>
-        </div>
+    <nav>
+        <button class="nav-btn active" onclick="showTab('posts', this)">📢 Posts</button>
+        <button class="nav-btn" onclick="showTab('homework', this)">📝 Hausaufgaben</button>
+        <button class="nav-btn" onclick="showTab('about', this)">ℹ️ Über uns</button>
     </nav>
 
-    <main class="container">
-        <!-- Posts Section -->
+    <div class="container">
         <section id="posts" class="section active">
-            <h2>📢 What's Happening?</h2>
-            
+            <h2>📢 Was ist los?</h2>
             <div class="form-box">
-                <h3>Create a Post</h3>
-                <input type="text" id="postTitle" placeholder="What's on your mind? (e.g., Going to library!)" maxlength="100">
-                <textarea id="postContent" placeholder="Tell more details..." rows="4"></textarea>
-                <button class="btn btn-primary" onclick="addPost()">Post</button>
+                <h3>Neuen Post erstellen</h3>
+                <input type="text" id="postTitle" placeholder="Worum geht es?">
+                <textarea id="postContent" placeholder="Mehr Details..."></textarea>
+                <button class="btn" onclick="addPost()">📤 Post teilen</button>
             </div>
-
             <div id="postsList" class="items-list">
-                <p class="empty">No posts yet. Be the first!</p>
+                <p class="empty">Noch keine Posts 🎉</p>
             </div>
         </section>
 
-        <!-- Homework Section -->
-        <section id="homework" class="section" style="display:none;">
-            <h2>📝 Share Homework</h2>
-            
+        <section id="homework" class="section">
+            <h2>📝 Hausaufgaben</h2>
             <div class="form-box">
-                <h3>Share Your Homework</h3>
-                <input type="text" id="hwSubject" placeholder="Subject (e.g., Math, English)">
-                <input type="text" id="hwTitle" placeholder="Homework Title">
-                <textarea id="hwDescription" placeholder="Describe the assignment..." rows="4"></textarea>
-                <button class="btn btn-primary" onclick="addHomework()">Share</button>
+                <h3>Hausaufgabe teilen</h3>
+                <input type="text" id="hwSubject" placeholder="Fach">
+                <input type="text" id="hwTitle" placeholder="Titel">
+                <textarea id="hwDescription" placeholder="Beschreibung..."></textarea>
+                <button class="btn" onclick="addHomework()">📤 Teilen</button>
             </div>
-
             <div id="homeworkList" class="items-list">
-                <p class="empty">No homework shared yet.</p>
+                <p class="empty">Noch keine Hausaufgaben 🎓</p>
             </div>
         </section>
 
-        <!-- About Section -->
-        <section id="about" class="section" style="display:none;">
-            <h2>ℹ️ About StudyHub</h2>
-            <p>StudyHub helps students:</p>
-            <ul>
-                <li>Share and discuss homework assignments</li>
-                <li>Organize group activities (library visits, study sessions, etc.)</li>
-                <li>Collaborate with classmates</li>
-                <li>Stay connected and organized</li>
+        <section id="about" class="section">
+            <h2>ℹ️ Über StudyHub</h2>
+            <p>Deine Plattform zum Lernen zusammen!</p>
+            <ul style="list-style: none; margin: 20px 0;">
+                <li>✓ Posts erstellen</li>
+                <li>✓ Hausaufgaben teilen</li>
+                <li>✓ Zusammenarbeiten</li>
             </ul>
-            <p><strong>Happy learning! 🎓</strong></p>
         </section>
-    </main>
+    </div>
 
     <footer>
-        <p>&copy; 2026 StudyHub - Made by students, for students</p>
+        <p>© 2026 StudyHub 💚</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        let posts = [];
+        let homeworks = [];
+
+        function showTab(tabName, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function addPost() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            if (!title) { alert('Titel eingeben!'); return; }
+            posts.unshift({title, content, date: new Date().toLocaleString('de-DE')});
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            displayPosts();
+        }
+
+        function displayPosts() {
+            const list = document.getElementById('postsList');
+            if (posts.length === 0) { list.innerHTML = '<p class="empty">Noch keine Posts 🎉</p>'; return; }
+            list.innerHTML = posts.map(p => `<div class="item"><h3>${p.title}</h3><p>${p.content}</p><div class="item-meta">📅 ${p.date}</div></div>`).join('');
+        }
+
+        function addHomework() {
+            const subject = document.getElementById('hwSubject').value;
+            const title = document.getElementById('hwTitle').value;
+            const desc = document.getElementById('hwDescription').value;
+            if (!subject || !title) { alert('Fach und Titel eingeben!'); return; }
+            homeworks.unshift({subject, title, desc, date: new Date().toLocaleString('de-DE')});
+            document.getElementById('hwSubject').value = '';
+            document.getElementById('hwTitle').value = '';
+            document.getElementById('hwDescription').value = '';
+            displayHomework();
+        }
+
+        function displayHomework() {
+            const list = document.getElementById('homeworkList');
+            if (homeworks.length === 0) { list.innerHTML = '<p class="empty">Noch keine Hausaufgaben 🎓</p>'; return; }
+            list.innerHTML = homeworks.map(h => `<div class="item"><h3>📚 [${h.subject}] ${h.title}</h3><p>${h.desc}</p><div class="item-meta">📅 ${h.date}</div></div>`).join('');
+        }
+    </script>
 </body>
 </html>
