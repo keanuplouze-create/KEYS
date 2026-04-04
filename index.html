@@ -3,36 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Collaboration Website</title>
+    <title>StudyHub - Student Collaboration</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Welcome to the Student Collaboration Website</h1>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="container">
+            <h1>📚 StudyHub</h1>
+            <p>Share homework and plan activities with classmates</p>
+        </div>
     </header>
-    <main>
-        <section id="home">
-            <h2>Home</h2>
-            <p>This is the homepage for students to collaborate on projects.</p>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" onclick="showSection('posts'); return false;">📢 Posts</a>
+            <a href="#" onclick="showSection('homework'); return false;">📝 Homework</a>
+            <a href="#" onclick="showSection('about'); return false;">ℹ️ About</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Posts Section -->
+        <section id="posts" class="section active">
+            <h2>📢 What's Happening?</h2>
+            
+            <div class="form-box">
+                <h3>Create a Post</h3>
+                <input type="text" id="postTitle" placeholder="What's on your mind? (e.g., Going to library!)" maxlength="100">
+                <textarea id="postContent" placeholder="Tell more details..." rows="4"></textarea>
+                <button class="btn btn-primary" onclick="addPost()">Post</button>
+            </div>
+
+            <div id="postsList" class="items-list">
+                <p class="empty">No posts yet. Be the first!</p>
+            </div>
         </section>
-        <section id="about">
-            <h2>About</h2>
-            <p>Information about the collaboration and how to participate.</p>
+
+        <!-- Homework Section -->
+        <section id="homework" class="section" style="display:none;">
+            <h2>📝 Share Homework</h2>
+            
+            <div class="form-box">
+                <h3>Share Your Homework</h3>
+                <input type="text" id="hwSubject" placeholder="Subject (e.g., Math, English)">
+                <input type="text" id="hwTitle" placeholder="Homework Title">
+                <textarea id="hwDescription" placeholder="Describe the assignment..." rows="4"></textarea>
+                <button class="btn btn-primary" onclick="addHomework()">Share</button>
+            </div>
+
+            <div id="homeworkList" class="items-list">
+                <p class="empty">No homework shared yet.</p>
+            </div>
         </section>
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>Details on how to get in touch with the organizers.</p>
+
+        <!-- About Section -->
+        <section id="about" class="section" style="display:none;">
+            <h2>ℹ️ About StudyHub</h2>
+            <p>StudyHub helps students:</p>
+            <ul>
+                <li>Share and discuss homework assignments</li>
+                <li>Organize group activities (library visits, study sessions, etc.)</li>
+                <li>Collaborate with classmates</li>
+                <li>Stay connected and organized</li>
+            </ul>
+            <p><strong>Happy learning! 🎓</strong></p>
         </section>
     </main>
+
     <footer>
-        <p>&copy; 2026 Student Collaboration Website</p>
+        <p>&copy; 2026 StudyHub - Made by students, for students</p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
