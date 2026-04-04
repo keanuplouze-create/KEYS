@@ -137,25 +137,53 @@ h1 {
     font-size: 1.5em;
 }
 
-.upload-form {
+.upload-buttons {
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 15px;
+    margin-bottom: 20px;
 }
 
-input[type="file"], input[type="text"], textarea {
+.btn-upload-option {
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-upload-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-upload-option span {
+    font-size: 1.8em;
+}
+
+input[type="file"], textarea {
     width: 100%;
     padding: 12px;
     border: 2px solid #ddd;
     border-radius: 8px;
     font-size: 1em;
     font-family: Arial, sans-serif;
+    margin-bottom: 12px;
 }
 
 input[type="file"] {
     padding: 8px;
 }
 
-input[type="text"]:focus, textarea:focus {
+textarea:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
@@ -174,7 +202,7 @@ textarea {
     max-height: 300px;
 }
 
-.image-preview img {
+.image-preview img, .image-preview video {
     width: 100%;
     max-height: 300px;
     object-fit: cover;
@@ -223,11 +251,12 @@ textarea {
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-.post-image {
+.post-image, .post-video {
     width: 100%;
     height: 250px;
     object-fit: cover;
     background: #f0f0f0;
+    display: block;
 }
 
 .post-content {
@@ -337,6 +366,10 @@ textarea {
     50% { opacity: 0.5; }
 }
 
+#cameraInput, #fileInput, #galleryInput {
+    display: none;
+}
+
 @media (max-width: 600px) {
     header {
         flex-direction: column;
@@ -352,6 +385,9 @@ textarea {
     .upload-section {
         padding: 15px;
     }
+    .upload-buttons {
+        grid-template-columns: 1fr;
+    }
 }
     </style>
 </head>
@@ -359,7 +395,7 @@ textarea {
     <div id="loginModal" class="login-modal active">
         <div class="login-content">
             <h2>📸 StudyHub Gallery</h2>
-            <p style="margin-bottom: 20px; color: #666;">Teile Fotos mit der Klasse!</p>
+            <p style="margin-bottom: 20px; color: #666;">Teile Fotos & Videos mit der Klasse!</p>
             <input type="text" id="usernameInput" placeholder="Benutzername" onkeypress="if(event.key==='Enter') login()">
             <button onclick="login()">Anmelden 🎬</button>
         </div>
@@ -375,13 +411,34 @@ textarea {
         </header>
 
         <div class="upload-section">
-            <h2>📤 Foto hochladen</h2>
-            <div class="upload-form">
-                <input type="file" id="imageInput" accept="image/*" onchange="previewImage()">
-                <div class="image-preview" id="preview"></div>
-                <textarea id="captionInput" placeholder="Bildunterschrift (Optional)"></textarea>
-                <button class="btn-upload" onclick="uploadImage()">📸 Hochladen</button>
+            <h2>📤 Foto/Video hochladen</h2>
+            <div class="upload-buttons">
+                <button class="btn-upload-option" onclick="openCamera()">
+                    <span>📷</span>
+                    Foto machen
+                </button>
+                <button class="btn-upload-option" onclick="openVideo()">
+                    <span>🎥</span>
+                    Video aufnehmen
+                </button>
+                <button class="btn-upload-option" onclick="openGallery()">
+                    <span>🖼️</span>
+                    Galerie
+                </button>
+                <button class="btn-upload-option" onclick="openFiles()">
+                    <span>📁</span>
+                    Dateien
+                </button>
             </div>
+
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleCapture('camera')">
+            <input type="file" id="videoInput" accept="video/*" capture="environment" onchange="handleCapture('video')">
+            <input type="file" id="galleryInput" accept="image/*,video/*" onchange="handleCapture('gallery')">
+            <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleCapture('file')">
+
+            <div class="image-preview" id="preview"></div>
+            <textarea id="captionInput" placeholder="Bildunterschrift (Optional)"></textarea>
+            <button class="btn-upload" onclick="uploadMedia()">📤 Hochladen</button>
         </div>
 
         <div id="galleryContainer" class="gallery"></div>
@@ -394,6 +451,8 @@ textarea {
     <script>
         let posts = [];
         let currentUser = null;
+        let currentMediaData = null;
+        let currentMediaType = null;
 
         // Login
         function login() {
@@ -417,6 +476,57 @@ textarea {
             location.reload();
         }
 
+        // Kamera öffnen
+        function openCamera() {
+            document.getElementById('cameraInput').click();
+        }
+
+        // Video öffnen
+        function openVideo() {
+            document.getElementById('videoInput').click();
+        }
+
+        // Galerie öffnen
+        function openGallery() {
+            document.getElementById('galleryInput').click();
+        }
+
+        // Dateien öffnen
+        function openFiles() {
+            document.getElementById('fileInput').click();
+        }
+
+        // Media capture
+        function handleCapture(type) {
+            let inputId = '';
+            if (type === 'camera') inputId = 'cameraInput';
+            if (type === 'video') inputId = 'videoInput';
+            if (type === 'gallery') inputId = 'galleryInput';
+            if (type === 'file') inputId = 'fileInput';
+
+            const file = document.getElementById(inputId).files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentMediaData = e.target.result;
+                    currentMediaType = file.type.startsWith('video') ? 'video' : 'image';
+                    previewMedia();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Media Preview
+        function previewMedia() {
+            const preview = document.getElementById('preview');
+            if (currentMediaType === 'video') {
+                preview.innerHTML = `<video src="${currentMediaData}" controls style="width: 100%;"></video>`;
+            } else {
+                preview.innerHTML = `<img src="${currentMediaData}">`;
+            }
+            preview.style.display = 'block';
+        }
+
         // Posts laden
         function loadPosts() {
             const saved = localStorage.getItem('gallery_posts');
@@ -431,59 +541,49 @@ textarea {
             localStorage.setItem('gallery_posts', JSON.stringify(posts));
         }
 
-        // Bild Preview
-        function previewImage() {
-            const file = document.getElementById('imageInput').files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const preview = document.getElementById('preview');
-                    preview.innerHTML = `<img src="${e.target.result}">`;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Bild hochladen
-        function uploadImage() {
-            const file = document.getElementById('imageInput').files[0];
+        // Media hochladen
+        function uploadMedia() {
             const caption = document.getElementById('captionInput').value.trim();
 
-            if (!file) {
-                alert('Bild auswählen!');
+            if (!currentMediaData) {
+                alert('Foto oder Video auswählen!');
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const post = {
-                    id: Date.now(),
-                    author: currentUser,
-                    image: e.target.result,
-                    caption: caption,
-                    likes: 0,
-                    liked: false,
-                    date: new Date().toLocaleString('de-DE', {
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })
-                };
-
-                posts.unshift(post);
-                savePosts();
-                document.getElementById('imageInput').value = '';
-                document.getElementById('captionInput').value = '';
-                document.getElementById('preview').style.display = 'none';
-                renderGallery();
-                alert('✅ Foto hochgeladen!');
+            const post = {
+                id: Date.now(),
+                author: currentUser,
+                media: currentMediaData,
+                mediaType: currentMediaType,
+                caption: caption,
+                likes: 0,
+                liked: false,
+                date: new Date().toLocaleString('de-DE', {
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
             };
-            reader.readAsDataURL(file);
+
+            posts.unshift(post);
+            savePosts();
+            
+            // Reset
+            currentMediaData = null;
+            currentMediaType = null;
+            document.getElementById('cameraInput').value = '';
+            document.getElementById('videoInput').value = '';
+            document.getElementById('galleryInput').value = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('captionInput').value = '';
+            document.getElementById('preview').style.display = 'none';
+            
+            renderGallery();
+            alert('✅ ' + (currentMediaType === 'video' ? 'Video' : 'Foto') + ' hochgeladen!');
         }
 
-        // Bild liken
+        // Media liken
         function toggleLike(id) {
             const post = posts.find(p => p.id === id);
             if (post) {
@@ -499,7 +599,7 @@ textarea {
             }
         }
 
-        // Bild löschen
+        // Media löschen
         function deletePost(id) {
             if (confirm('Wirklich löschen?')) {
                 posts = posts.filter(p => p.id !== id);
@@ -516,7 +616,7 @@ textarea {
                 container.innerHTML = `
                     <div class="empty-state" style="grid-column: 1/-1;">
                         <div class="empty-state-icon">📭</div>
-                        <p>Noch keine Fotos hochgeladen.</p>
+                        <p>Noch keine Fotos/Videos hochgeladen.</p>
                         <p>Sei der Erste! 📸</p>
                     </div>
                 `;
@@ -525,7 +625,10 @@ textarea {
 
             container.innerHTML = posts.map(post => `
                 <div class="post">
-                    <img src="${post.image}" class="post-image" alt="Post">
+                    ${post.mediaType === 'video' 
+                        ? `<video src="${post.media}" class="post-video" controls></video>`
+                        : `<img src="${post.media}" class="post-image" alt="Post">`
+                    }
                     <div class="post-content">
                         <div class="post-author">
                             <span class="post-author-name">👤 ${escapeHtml(post.author)}</span>
@@ -534,7 +637,7 @@ textarea {
                         ${post.caption ? `<p class="post-caption">"${escapeHtml(post.caption)}"</p>` : ''}
                         <div class="post-actions">
                             <button class="btn-like ${post.liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">❤️ ${post.likes}</button>
-                            ${post.author === currentUser ? `<button class="btn-delete" onclick="deletePost(${post.id})">🗑️ Löschen</button>` : ''}
+                            ${post.author === currentUser ? `<button class="btn-delete" onclick="deletePost(${post.id})">🗑️</button>` : ''}
                         </div>
                     </div>
                 </div>
