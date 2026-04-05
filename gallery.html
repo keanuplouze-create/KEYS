@@ -15,7 +15,7 @@ body {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -65,6 +65,19 @@ h1 {
     background: #c0392b;
 }
 
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+}
+
+@media (max-width: 1000px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* LOGIN MODAL */
 .login-modal {
     display: none;
     position: fixed;
@@ -89,12 +102,44 @@ h1 {
     width: 90%;
     max-width: 400px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    text-align: center;
 }
 
 .login-content h2 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: #333;
+    text-align: center;
+}
+
+.login-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.login-tab {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #999;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+}
+
+.login-tab.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+.login-form {
+    display: none;
+}
+
+.login-form.active {
+    display: block;
 }
 
 .login-content input {
@@ -104,6 +149,11 @@ h1 {
     border: 2px solid #ddd;
     border-radius: 8px;
     font-size: 1em;
+}
+
+.login-content input:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
 .login-content button {
@@ -123,6 +173,7 @@ h1 {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
+/* UPLOAD SECTION */
 .upload-section {
     background: white;
     padding: 25px;
@@ -139,25 +190,25 @@ h1 {
 
 .upload-buttons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
     margin-bottom: 20px;
 }
 
 .btn-upload-option {
-    padding: 15px;
+    padding: 12px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1em;
+    font-size: 0.9em;
     transition: all 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .btn-upload-option:hover {
@@ -166,7 +217,7 @@ h1 {
 }
 
 .btn-upload-option span {
-    font-size: 1.8em;
+    font-size: 1.5em;
 }
 
 input[type="file"], textarea {
@@ -179,10 +230,6 @@ input[type="file"], textarea {
     margin-bottom: 12px;
 }
 
-input[type="file"] {
-    padding: 8px;
-}
-
 textarea:focus {
     outline: none;
     border-color: #667eea;
@@ -190,7 +237,7 @@ textarea:focus {
 }
 
 textarea {
-    min-height: 80px;
+    min-height: 70px;
     resize: vertical;
 }
 
@@ -199,12 +246,12 @@ textarea {
     display: none;
     border-radius: 8px;
     overflow: hidden;
-    max-height: 300px;
+    max-height: 250px;
 }
 
 .image-preview img, .image-preview video {
     width: 100%;
-    max-height: 300px;
+    max-height: 250px;
     object-fit: cover;
 }
 
@@ -225,83 +272,90 @@ textarea {
     box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
 }
 
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+/* GALLERY */
+.gallery-section {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-@media (max-width: 600px) {
-    .gallery {
-        grid-template-columns: 1fr;
-    }
+.gallery-section h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
 }
 
 .post {
-    background: white;
-    border-radius: 15px;
+    background: #f9f9f9;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     transition: all 0.3s;
 }
 
 .post:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
 }
 
-.post-image, .post-video {
+.post-media {
     width: 100%;
-    height: 250px;
+    height: 200px;
     object-fit: cover;
     background: #f0f0f0;
-    display: block;
 }
 
 .post-content {
-    padding: 15px;
+    padding: 12px;
 }
 
 .post-author {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .post-author-name {
     font-weight: bold;
     color: #333;
-    font-size: 1em;
+    font-size: 0.95em;
 }
 
 .post-date {
-    font-size: 0.75em;
+    font-size: 0.7em;
     color: #999;
 }
 
 .post-caption {
     color: #666;
-    font-size: 0.95em;
-    line-height: 1.5;
-    margin-bottom: 12px;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 10px;
     word-break: break-word;
 }
 
 .post-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .btn-like {
     flex: 1;
-    padding: 8px;
+    padding: 6px;
     background: #f0f0f0;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 0.85em;
     transition: 0.3s;
 }
 
@@ -317,13 +371,13 @@ textarea {
 
 .btn-delete {
     flex: 1;
-    padding: 8px;
+    padding: 6px;
     background: #f0f0f0;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: 0.3s;
+    font-size: 0.85em;
 }
 
 .btn-delete:hover {
@@ -331,42 +385,115 @@ textarea {
     color: white;
 }
 
+/* CHAT SIDEBAR */
+.chat-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    height: 700px;
+    max-height: 100%;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 15px 15px 0 0;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background: #f9f9f9;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
+}
+
+.message.own {
+    border-left: 3px solid #27ae60;
+    background: #e8f5e9;
+    margin-left: 15px;
+}
+
+.message-author {
+    font-weight: bold;
+    color: #333;
+    font-size: 0.85em;
+    margin-bottom: 3px;
+}
+
+.message-text {
+    color: #666;
+    font-size: 0.9em;
+    word-break: break-word;
+}
+
+.message-time {
+    font-size: 0.7em;
+    color: #999;
+    margin-top: 3px;
+}
+
+.chat-input-group {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: white;
+    border-top: 1px solid #eee;
+    border-radius: 0 0 15px 15px;
+}
+
+.chat-input-group input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.chat-input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.chat-input-group button {
+    padding: 8px 15px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.chat-input-group button:hover {
+    background: #764ba2;
+}
+
 .empty-state {
     text-align: center;
-    background: white;
-    padding: 60px 20px;
-    border-radius: 15px;
     color: #999;
+    padding: 40px 20px;
 }
 
 .empty-state-icon {
-    font-size: 4em;
-    margin-bottom: 15px;
+    font-size: 3em;
+    margin-bottom: 10px;
 }
 
-.sync-indicator {
-    text-align: center;
-    color: white;
-    font-size: 0.9em;
-    margin-top: 20px;
-}
-
-.sync-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background: #2ecc71;
-    border-radius: 50%;
-    margin-right: 5px;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-#cameraInput, #fileInput, #galleryInput {
+#cameraInput, #videoInput, #galleryInput, #fileInput {
     display: none;
 }
 
@@ -382,25 +509,58 @@ textarea {
         flex-direction: column;
         width: 100%;
     }
-    .upload-section {
-        padding: 15px;
-    }
-    .upload-buttons {
+    .gallery {
         grid-template-columns: 1fr;
     }
+    .chat-section {
+        height: 400px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 3px;
 }
     </style>
 </head>
 <body>
+    <!-- LOGIN MODAL -->
     <div id="loginModal" class="login-modal active">
         <div class="login-content">
             <h2>📸 StudyHub Gallery</h2>
-            <p style="margin-bottom: 20px; color: #666;">Teile Fotos & Videos mit der Klasse!</p>
-            <input type="text" id="usernameInput" placeholder="Benutzername" onkeypress="if(event.key==='Enter') login()">
-            <button onclick="login()">Anmelden 🎬</button>
+            
+            <div class="login-tabs">
+                <button class="login-tab active" onclick="switchTab('login')">Login</button>
+                <button class="login-tab" onclick="switchTab('register')">Registrieren</button>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <form id="loginForm" class="login-form active" onsubmit="login(event)">
+                <input type="text" id="loginUsername" placeholder="Benutzername" required>
+                <input type="password" id="loginPassword" placeholder="Passwort" required>
+                <button type="submit">Anmelden 🔐</button>
+            </form>
+
+            <!-- REGISTER FORM -->
+            <form id="registerForm" class="login-form" onsubmit="register(event)">
+                <input type="text" id="regUsername" placeholder="Benutzername" required>
+                <input type="email" id="regEmail" placeholder="E-Mail" required>
+                <input type="password" id="regPassword" placeholder="Passwort" required>
+                <input type="password" id="regPassword2" placeholder="Passwort wiederholen" required>
+                <button type="submit">Registrieren ✍️</button>
+            </form>
         </div>
     </div>
 
+    <!-- APP CONTAINER -->
     <div id="appContainer" style="display: none;">
         <header>
             <h1>📸 StudyHub Gallery</h1>
@@ -410,101 +570,185 @@ textarea {
             </div>
         </header>
 
-        <div class="upload-section">
-            <h2>📤 Foto/Video hochladen</h2>
-            <div class="upload-buttons">
-                <button class="btn-upload-option" onclick="openCamera()">
-                    <span>📷</span>
-                    Foto machen
-                </button>
-                <button class="btn-upload-option" onclick="openVideo()">
-                    <span>🎥</span>
-                    Video aufnehmen
-                </button>
-                <button class="btn-upload-option" onclick="openGallery()">
-                    <span>🖼️</span>
-                    Galerie
-                </button>
-                <button class="btn-upload-option" onclick="openFiles()">
-                    <span>📁</span>
-                    Dateien
-                </button>
+        <div class="main-content">
+            <div>
+                <!-- UPLOAD SECTION -->
+                <div class="upload-section">
+                    <h2>📤 Foto/Video hochladen</h2>
+                    <div class="upload-buttons">
+                        <button class="btn-upload-option" onclick="openCamera()">
+                            <span>📷</span>
+                            Foto
+                        </button>
+                        <button class="btn-upload-option" onclick="openVideo()">
+                            <span>🎥</span>
+                            Video
+                        </button>
+                        <button class="btn-upload-option" onclick="openGallery()">
+                            <span>🖼️</span>
+                            Galerie
+                        </button>
+                        <button class="btn-upload-option" onclick="openFiles()">
+                            <span>📁</span>
+                            Dateien
+                        </button>
+                    </div>
+
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleCapture('camera')">
+                    <input type="file" id="videoInput" accept="video/*" capture="environment" onchange="handleCapture('video')">
+                    <input type="file" id="galleryInput" accept="image/*,video/*" onchange="handleCapture('gallery')">
+                    <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleCapture('file')">
+
+                    <div class="image-preview" id="preview"></div>
+                    <textarea id="captionInput" placeholder="Bildunterschrift (Optional)"></textarea>
+                    <button class="btn-upload" onclick="uploadMedia()">📤 Hochladen</button>
+                </div>
+
+                <!-- GALLERY SECTION -->
+                <div class="gallery-section">
+                    <h2>🖼️ Galerie</h2>
+                    <div id="galleryContainer" class="gallery"></div>
+                </div>
             </div>
 
-            <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleCapture('camera')">
-            <input type="file" id="videoInput" accept="video/*" capture="environment" onchange="handleCapture('video')">
-            <input type="file" id="galleryInput" accept="image/*,video/*" onchange="handleCapture('gallery')">
-            <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleCapture('file')">
-
-            <div class="image-preview" id="preview"></div>
-            <textarea id="captionInput" placeholder="Bildunterschrift (Optional)"></textarea>
-            <button class="btn-upload" onclick="uploadMedia()">📤 Hochladen</button>
-        </div>
-
-        <div id="galleryContainer" class="gallery"></div>
-
-        <div class="sync-indicator">
-            <span class="sync-dot"></span> Live Sync aktiv
+            <!-- CHAT SIDEBAR -->
+            <div class="chat-section">
+                <div class="chat-header">💬 Live Chat</div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-group">
+                    <input type="text" id="chatInput" placeholder="Nachricht..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        let users = {};
         let posts = [];
+        let messages = [];
         let currentUser = null;
         let currentMediaData = null;
         let currentMediaType = null;
 
-        // Login
-        function login() {
-            const username = document.getElementById('usernameInput').value.trim();
-            if (!username) {
-                alert('Benutzername eingeben!');
+        // Load all data
+        function loadAllData() {
+            const savedUsers = localStorage.getItem('gallery_users');
+            if (savedUsers) users = JSON.parse(savedUsers);
+            
+            const savedPosts = localStorage.getItem('gallery_posts');
+            if (savedPosts) posts = JSON.parse(savedPosts);
+            
+            const savedMessages = localStorage.getItem('gallery_messages');
+            if (savedMessages) messages = JSON.parse(savedMessages);
+        }
+
+        // Save all data
+        function saveAllData() {
+            localStorage.setItem('gallery_users', JSON.stringify(users));
+            localStorage.setItem('gallery_posts', JSON.stringify(posts));
+            localStorage.setItem('gallery_messages', JSON.stringify(messages));
+        }
+
+        // Switch login/register tab
+        function switchTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelectorAll('.login-tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.login-tab')[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+
+        // Register
+        function register(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const password2 = document.getElementById('regPassword2').value;
+
+            if (!username || !email || !password) {
+                alert('Alle Felder ausfüllen!');
                 return;
             }
+            if (password !== password2) {
+                alert('Passwörter stimmen nicht!');
+                return;
+            }
+            if (users[username]) {
+                alert('Benutzername bereits vergeben!');
+                return;
+            }
+
+            users[username] = { email, password };
+            saveAllData();
+            alert('✅ Registrierung erfolgreich! Jetzt anmelden.');
+            switchTab('login');
+        }
+
+        // Login
+        function login(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                alert('Benutzername & Passwort eingeben!');
+                return;
+            }
+            if (!users[username] || users[username].password !== password) {
+                alert('Falsch!');
+                return;
+            }
+
             currentUser = username;
-            localStorage.setItem('gallery_user', username);
-            document.getElementById('loginModal').classList.remove('active');
-            document.getElementById('appContainer').style.display = 'block';
-            document.getElementById('currentUserDisplay').textContent = username;
-            loadPosts();
+            localStorage.setItem('gallery_currentUser', username);
+            showApp();
         }
 
         // Logout
         function logout() {
             currentUser = null;
-            localStorage.removeItem('gallery_user');
+            localStorage.removeItem('gallery_currentUser');
             location.reload();
         }
 
-        // Kamera öffnen
+        // Show app
+        function showApp() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('appContainer').style.display = 'block';
+            document.getElementById('currentUserDisplay').textContent = currentUser;
+            renderGallery();
+            renderChat();
+        }
+
+        // Camera
         function openCamera() {
             document.getElementById('cameraInput').click();
         }
 
-        // Video öffnen
         function openVideo() {
             document.getElementById('videoInput').click();
         }
 
-        // Galerie öffnen
         function openGallery() {
             document.getElementById('galleryInput').click();
         }
 
-        // Dateien öffnen
         function openFiles() {
             document.getElementById('fileInput').click();
         }
 
-        // Media capture
+        // Handle media capture
         function handleCapture(type) {
-            let inputId = '';
-            if (type === 'camera') inputId = 'cameraInput';
-            if (type === 'video') inputId = 'videoInput';
-            if (type === 'gallery') inputId = 'galleryInput';
-            if (type === 'file') inputId = 'fileInput';
-
+            let inputId = type === 'camera' ? 'cameraInput' : type === 'video' ? 'videoInput' : type === 'gallery' ? 'galleryInput' : 'fileInput';
             const file = document.getElementById(inputId).files[0];
+            
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -516,7 +760,7 @@ textarea {
             }
         }
 
-        // Media Preview
+        // Preview media
         function previewMedia() {
             const preview = document.getElementById('preview');
             if (currentMediaType === 'video') {
@@ -527,26 +771,12 @@ textarea {
             preview.style.display = 'block';
         }
 
-        // Posts laden
-        function loadPosts() {
-            const saved = localStorage.getItem('gallery_posts');
-            if (saved) {
-                posts = JSON.parse(saved);
-            }
-            renderGallery();
-        }
-
-        // Posts speichern
-        function savePosts() {
-            localStorage.setItem('gallery_posts', JSON.stringify(posts));
-        }
-
-        // Media hochladen
+        // Upload media
         function uploadMedia() {
             const caption = document.getElementById('captionInput').value.trim();
 
             if (!currentMediaData) {
-                alert('Foto oder Video auswählen!');
+                alert('Foto/Video auswählen!');
                 return;
             }
 
@@ -567,9 +797,8 @@ textarea {
             };
 
             posts.unshift(post);
-            savePosts();
+            saveAllData();
             
-            // Reset
             currentMediaData = null;
             currentMediaType = null;
             document.getElementById('cameraInput').value = '';
@@ -580,10 +809,10 @@ textarea {
             document.getElementById('preview').style.display = 'none';
             
             renderGallery();
-            alert('✅ ' + (currentMediaType === 'video' ? 'Video' : 'Foto') + ' hochgeladen!');
+            alert('✅ Hochgeladen!');
         }
 
-        // Media liken
+        // Like
         function toggleLike(id) {
             const post = posts.find(p => p.id === id);
             if (post) {
@@ -594,45 +823,39 @@ textarea {
                     post.likes++;
                     post.liked = true;
                 }
-                savePosts();
+                saveAllData();
                 renderGallery();
             }
         }
 
-        // Media löschen
+        // Delete
         function deletePost(id) {
             if (confirm('Wirklich löschen?')) {
                 posts = posts.filter(p => p.id !== id);
-                savePosts();
+                saveAllData();
                 renderGallery();
             }
         }
 
-        // Galerie rendern
+        // Render gallery
         function renderGallery() {
             const container = document.getElementById('galleryContainer');
 
             if (posts.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <div class="empty-state-icon">📭</div>
-                        <p>Noch keine Fotos/Videos hochgeladen.</p>
-                        <p>Sei der Erste! 📸</p>
-                    </div>
-                `;
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Noch keine Fotos/Videos</p></div>';
                 return;
             }
 
             container.innerHTML = posts.map(post => `
                 <div class="post">
                     ${post.mediaType === 'video' 
-                        ? `<video src="${post.media}" class="post-video" controls></video>`
-                        : `<img src="${post.media}" class="post-image" alt="Post">`
+                        ? `<video src="${post.media}" class="post-media" controls></video>`
+                        : `<img src="${post.media}" class="post-media">`
                     }
                     <div class="post-content">
                         <div class="post-author">
                             <span class="post-author-name">👤 ${escapeHtml(post.author)}</span>
-                            <span class="post-date">📅 ${post.date}</span>
+                            <span class="post-date">${post.date}</span>
                         </div>
                         ${post.caption ? `<p class="post-caption">"${escapeHtml(post.caption)}"</p>` : ''}
                         <div class="post-actions">
@@ -644,35 +867,67 @@ textarea {
             `).join('');
         }
 
-        // HTML escapen
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            messages.push({
+                id: Date.now(),
+                author: currentUser,
+                text: text,
+                date: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
+            });
+
+            saveAllData();
+            input.value = '';
+            renderChat();
+        }
+
+        // Render chat
+        function renderChat() {
+            const chat = document.getElementById('chatMessages');
+            
+            if (messages.length === 0) {
+                chat.innerHTML = '<div class="empty-state" style="justify-content: center;"><p>Noch keine Nachrichten 💬</p></div>';
+                return;
+            }
+
+            chat.innerHTML = messages.map(m => `
+                <div class="message ${m.author === currentUser ? 'own' : ''}">
+                    <div class="message-author">${escapeHtml(m.author)}</div>
+                    <div class="message-text">${escapeHtml(m.text)}</div>
+                    <div class="message-time">${m.date}</div>
+                </div>
+            `).join('');
+            
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // Escape HTML
         function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
-        // Auto-Refresh
+        // Auto refresh
         setInterval(() => {
             if (currentUser) {
-                loadPosts();
+                loadAllData();
+                renderGallery();
+                renderChat();
             }
-        }, 3000);
+        }, 2000);
 
-        // Beim Laden
+        // Init
         window.addEventListener('load', () => {
-            const saved = localStorage.getItem('gallery_user');
-            if (saved) {
+            loadAllData();
+            const saved = localStorage.getItem('gallery_currentUser');
+            if (saved && users[saved]) {
                 currentUser = saved;
-                document.getElementById('usernameInput').value = saved;
-                document.getElementById('loginModal').classList.remove('active');
-                document.getElementById('appContainer').style.display = 'block';
-                document.getElementById('currentUserDisplay').textContent = saved;
-                loadPosts();
+                showApp();
             }
         });
     </script>
