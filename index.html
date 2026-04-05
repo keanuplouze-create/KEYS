@@ -4,66 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>StudyHub</title>
+    <title>StudyHub - Optimized</title>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Arial, sans-serif; background: #f0f0f0; }
-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
-header h1 { font-size: 2em; margin-bottom: 5px; }
-.user-info { background: #2c3e50; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f0f0; }
+header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+h1 { font-size: 2em; margin-bottom: 5px; }
+.user-info { background: #2c3e50; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .user-info span { font-weight: bold; }
-.btn-logout { background: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.btn-logout:hover { background: #c0392b; }
+.btn-logout { background: #e74c3c; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+.btn-logout:hover { background: #c0392b; transform: translateY(-2px); }
+.btn-logout:active { transform: translateY(0); }
 .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
-.modal.active { display: flex; }
-.modal-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; }
-.modal-content h2 { margin-bottom: 20px; }
+.modal.active { display: flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+.modal-content h2 { margin-bottom: 20px; color: #333; }
 .modal-content input, .modal-content textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
-.modal-content button { width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.modal-content input:focus, .modal-content textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 8px rgba(102, 126, 234, 0.3); }
+.modal-content button { width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
 .modal-content button:hover { background: #764ba2; }
 .modal-toggle { text-align: center; margin-top: 10px; }
 .modal-toggle a { color: #667eea; cursor: pointer; text-decoration: underline; }
-nav { background: #2c3e50; display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
-nav button { background: #2c3e50; color: white; border: none; padding: 12px 15px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; }
-nav button.active { background: #3498db; border-bottom: 3px solid #2ecc71; }
+nav { background: #2c3e50; display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+nav button { background: #2c3e50; color: white; border: none; padding: 12px 15px; cursor: pointer; font-weight: bold; border-bottom: 3px solid transparent; transition: all 0.3s; }
+nav button:hover { background: #34495e; }
+nav button.active { background: #3498db; border-bottom-color: #2ecc71; }
 .container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
-.section { display: none; background: white; padding: 20px; margin: 20px auto; border-radius: 8px; }
+.section { display: none; background: white; padding: 20px; margin: 20px auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .section.active { display: block; }
 .section h2 { color: #333; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
 .form-box { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #667eea; }
 .form-box h3 { color: #333; margin-bottom: 10px; }
 input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em; }
-textarea { min-height: 80px; }
-.btn { background: #667eea; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.btn:hover { background: #764ba2; }
+textarea { min-height: 80px; resize: vertical; }
+.btn { background: #667eea; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+.btn:hover { background: #764ba2; transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
 .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-@media (max-width: 600px) { .items-grid { grid-template-columns: 1fr; } }
-.item { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #667eea; }
+.item { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #667eea; transition: all 0.3s; }
+.item:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 .item h3 { color: #333; margin-bottom: 8px; }
 .item-author { font-size: 0.85em; color: #999; }
 .item p { color: #666; margin: 10px 0; }
 .item-meta { color: #999; font-size: 0.8em; border-top: 1px solid #eee; padding-top: 8px; }
-.chat-box { display: flex; flex-direction: column; height: 500px; background: white; border-radius: 8px; }
+.chat-box { display: flex; flex-direction: column; height: 500px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .chat-messages { flex: 1; overflow-y: auto; padding: 15px; background: #f9f9f9; border-radius: 8px 8px 0 0; }
-.message { margin-bottom: 12px; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #667eea; }
+.message { margin-bottom: 12px; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #667eea; animation: slideUp 0.3s ease; }
 .message.own { border-left: 4px solid #2ecc71; background: #e8f5e9; }
 .message-author { font-weight: bold; color: #333; }
-.message-text { color: #666; margin-top: 5px; }
+.message-text { color: #666; margin-top: 5px; word-break: break-word; }
 .message-time { font-size: 0.75em; color: #999; margin-top: 5px; }
 .chat-input { display: flex; gap: 10px; padding: 15px; background: white; border-top: 1px solid #eee; border-radius: 0 0 8px 8px; }
 .chat-input input { flex: 1; }
 .chat-input button { width: auto; }
 .empty { text-align: center; color: #999; padding: 40px; }
-footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
+footer { background: #2c3e50; color: white; text-align: center; padding: 15px; margin-top: 20px; }
+@media (max-width: 600px) {
+    .items-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.5em; }
+    nav button { padding: 10px 12px; font-size: 0.9em; }
+    .section { padding: 15px; }
+}
     </style>
 </head>
 <body>
     <div id="authModal" class="modal active">
         <div class="modal-content">
             <h2>📚 StudyHub</h2>
-            
             <div id="loginForm">
                 <h3>Anmelden</h3>
                 <input type="text" id="loginUsername" placeholder="Benutzername">
@@ -73,7 +83,6 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
                     Kein Konto? <a onclick="switchToRegister()">Registrieren</a>
                 </div>
             </div>
-
             <div id="registerForm" style="display: none;">
                 <h3>Registrieren</h3>
                 <input type="text" id="regUsername" placeholder="Benutzername">
@@ -106,92 +115,90 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
     </nav>
 
     <div class="container" id="mainContent" style="display: none;">
-        <!-- POSTS -->
         <section id="posts" class="section active">
             <h2>📢 Posts</h2>
             <div class="form-box">
-                <h3>Neuen Post</h3>
-                <input type="text" id="postTitle" placeholder="Titel">
-                <textarea id="postContent" placeholder="Nachricht"></textarea>
+                <h3>Neuen Post erstellen</h3>
+                <input type="text" id="postTitle" placeholder="Titel" maxlength="100">
+                <textarea id="postContent" placeholder="Nachricht" maxlength="1000"></textarea>
                 <button class="btn" onclick="addPost()">Posten</button>
             </div>
             <div id="postsList" class="items-grid"></div>
         </section>
 
-        <!-- CHAT -->
         <section id="chat" class="section">
             <h2>💬 Chat</h2>
             <div class="chat-box">
                 <div class="chat-messages" id="chatMessages"></div>
                 <div class="chat-input">
-                    <input type="text" id="chatInput" placeholder="Nachricht...">
+                    <input type="text" id="chatInput" placeholder="Nachricht..." maxlength="500">
                     <button class="btn" onclick="sendMessage()">Send</button>
                 </div>
             </div>
         </section>
 
-        <!-- TASKS -->
         <section id="tasks" class="section">
             <h2>✅ Aufgaben</h2>
             <div class="form-box">
                 <h3>Neue Aufgabe</h3>
-                <input type="text" id="taskTitle" placeholder="Titel">
-                <textarea id="taskDesc" placeholder="Beschreibung"></textarea>
+                <input type="text" id="taskTitle" placeholder="Titel" maxlength="100">
+                <textarea id="taskDesc" placeholder="Beschreibung" maxlength="500"></textarea>
                 <input type="date" id="taskDeadline">
-                <button class="btn" onclick="addTask()">Aufgabe</button>
+                <button class="btn" onclick="addTask()">Aufgabe erstellen</button>
             </div>
             <div id="tasksList" class="items-grid"></div>
         </section>
 
-        <!-- CALENDAR -->
         <section id="calendar" class="section">
             <h2>📅 Kalender</h2>
             <div class="form-box">
                 <h3>Neuer Termin</h3>
-                <input type="text" id="eventTitle" placeholder="Titel">
+                <input type="text" id="eventTitle" placeholder="Titel" maxlength="100">
                 <input type="date" id="eventDate">
                 <input type="time" id="eventTime">
-                <button class="btn" onclick="addEvent()">Termin</button>
+                <button class="btn" onclick="addEvent()">Termin erstellen</button>
             </div>
             <div id="calendarList" class="items-grid"></div>
         </section>
     </div>
 
     <footer id="mainFooter" style="display: none;">
-        <p>© 2026 StudyHub 💚</p>
+        <p>© 2026 StudyHub 💚 - Optimized Version</p>
     </footer>
 
+    <script src="lib.js"></script>
     <script>
-        // Service Worker Registration - MUSS ZUERST KOMMEN!
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/KEYS/sw.js').then(reg => {
-                console.log('✅ SW registered');
-                setInterval(() => reg.update(), 5000);
-            }).catch(err => console.log('❌ SW error:', err));
-        }
-
-        // Daten im localStorage speichern
-        let data = {
-            users: {},
-            posts: [],
-            messages: [],
-            tasks: [],
-            events: []
-        };
-
+        const storage = new StorageManager('StudyHub');
+        let data = { users: {}, posts: [], messages: [], tasks: [], events: [] };
         let currentUser = null;
 
-        // Beim Laden: Daten aus localStorage holen
-        function loadData() {
-            const saved = localStorage.getItem('studyhub_data');
-            if (saved) {
-                data = JSON.parse(saved);
+        async function initApp() {
+            try {
+                await storage.init();
+                const saved = await storage.get('studyhub_data');
+                if (saved) data = saved;
+                const user = localStorage.getItem('studyhub_user');
+                if (user && data.users[user]) {
+                    currentUser = user;
+                    showApp();
+                }
+            } catch (e) {
+                console.error('Init error:', e);
+                fallbackToLocalStorage();
             }
         }
 
-        // Daten speichern
-        function saveData() {
-            localStorage.setItem('studyhub_data', JSON.stringify(data));
+        function fallbackToLocalStorage() {
+            const saved = localStorage.getItem('studyhub_data');
+            if (saved) data = JSON.parse(saved);
+        }
+
+        async function saveData() {
+            try {
+                await storage.set('studyhub_data', data);
+            } catch (e) {
+                localStorage.setItem('studyhub_data', JSON.stringify(data));
+            }
         }
 
         function switchToRegister() {
@@ -210,13 +217,22 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             const password = document.getElementById('regPassword').value;
             const password2 = document.getElementById('regPassword2').value;
 
-            if (!username || !email || !password) { alert('Alle Felder ausfüllen!'); return; }
-            if (password !== password2) { alert('Passwörter stimmen nicht!'); return; }
-            if (data.users[username]) { alert('Benutzername vergeben!'); return; }
+            if (!username || !email || !password) {
+                Utils.showNotification('Alle Felder ausfüllen!', 'error');
+                return;
+            }
+            if (password !== password2) {
+                Utils.showNotification('Passwörter stimmen nicht!', 'error');
+                return;
+            }
+            if (data.users[username]) {
+                Utils.showNotification('Benutzername vergeben!', 'error');
+                return;
+            }
 
             data.users[username] = { email, password };
             saveData();
-            alert('Registrierung erfolgreich!');
+            Utils.showNotification('✅ Registrierung erfolgreich!');
             switchToLogin();
         }
 
@@ -224,8 +240,14 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            if (!username || !password) { alert('Benutzername & Passwort!'); return; }
-            if (!data.users[username] || data.users[username].password !== password) { alert('Falsch!'); return; }
+            if (!username || !password) {
+                Utils.showNotification('Benutzername & Passwort eingeben!', 'error');
+                return;
+            }
+            if (!data.users[username] || data.users[username].password !== password) {
+                Utils.showNotification('Falsch!', 'error');
+                return;
+            }
 
             currentUser = username;
             localStorage.setItem('studyhub_user', username);
@@ -259,20 +281,24 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             const title = document.getElementById('postTitle').value.trim();
             const content = document.getElementById('postContent').value.trim();
 
-            if (!title) { alert('Titel!'); return; }
+            if (!title) {
+                Utils.showNotification('Titel eingeben!', 'error');
+                return;
+            }
 
             data.posts.unshift({
                 id: Date.now(),
                 author: currentUser,
                 title,
                 content,
-                date: new Date().toLocaleString('de-DE')
+                date: Utils.formatDate()
             });
 
             saveData();
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
             refreshPosts();
+            Utils.showNotification('✅ Post erstellt!');
         }
 
         function refreshPosts() {
@@ -284,10 +310,10 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             list.innerHTML = data.posts.map(p => `
                 <div class="item">
                     <div style="display: flex; justify-content: space-between;">
-                        <h3>${p.title}</h3>
-                        <span class="item-author">${p.author}</span>
+                        <h3>${Utils.escapeHtml(p.title)}</h3>
+                        <span class="item-author">${Utils.escapeHtml(p.author)}</span>
                     </div>
-                    <p>${p.content}</p>
+                    <p>${Utils.escapeHtml(p.content)}</p>
                     <div class="item-meta">${p.date}</div>
                 </div>
             `).join('');
@@ -319,8 +345,8 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             }
             chat.innerHTML = data.messages.map(m => `
                 <div class="message ${m.author === currentUser ? 'own' : ''}">
-                    <div class="message-author">${m.author}</div>
-                    <div class="message-text">${m.text}</div>
+                    <div class="message-author">${Utils.escapeHtml(m.author)}</div>
+                    <div class="message-text">${Utils.escapeHtml(m.text)}</div>
                     <div class="message-time">${m.date}</div>
                 </div>
             `).join('');
@@ -332,7 +358,10 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             const desc = document.getElementById('taskDesc').value.trim();
             const deadline = document.getElementById('taskDeadline').value;
 
-            if (!title) { alert('Titel!'); return; }
+            if (!title) {
+                Utils.showNotification('Titel eingeben!', 'error');
+                return;
+            }
 
             data.tasks.unshift({
                 id: Date.now(),
@@ -340,7 +369,7 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
                 title,
                 desc,
                 deadline,
-                date: new Date().toLocaleString('de-DE')
+                date: Utils.formatDate()
             });
 
             saveData();
@@ -348,6 +377,7 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             document.getElementById('taskDesc').value = '';
             document.getElementById('taskDeadline').value = '';
             refreshTasks();
+            Utils.showNotification('✅ Aufgabe erstellt!');
         }
 
         function refreshTasks() {
@@ -359,10 +389,10 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             list.innerHTML = data.tasks.map(t => `
                 <div class="item">
                     <div style="display: flex; justify-content: space-between;">
-                        <h3>${t.title}</h3>
-                        <span class="item-author">${t.author}</span>
+                        <h3>${Utils.escapeHtml(t.title)}</h3>
+                        <span class="item-author">${Utils.escapeHtml(t.author)}</span>
                     </div>
-                    <p>${t.desc}</p>
+                    <p>${Utils.escapeHtml(t.desc)}</p>
                     <div class="item-meta">📅 ${t.deadline || 'Kein Datum'}</div>
                 </div>
             `).join('');
@@ -373,7 +403,10 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             const date = document.getElementById('eventDate').value;
             const time = document.getElementById('eventTime').value;
 
-            if (!title || !date) { alert('Titel & Datum!'); return; }
+            if (!title || !date) {
+                Utils.showNotification('Titel & Datum eingeben!', 'error');
+                return;
+            }
 
             data.events.unshift({
                 id: Date.now(),
@@ -388,6 +421,7 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             document.getElementById('eventDate').value = '';
             document.getElementById('eventTime').value = '';
             refreshCalendar();
+            Utils.showNotification('✅ Termin erstellt!');
         }
 
         function refreshCalendar() {
@@ -398,9 +432,9 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             }
             list.innerHTML = data.events.map(e => `
                 <div class="item">
-                    <h3>📌 ${e.title}</h3>
+                    <h3>📌 ${Utils.escapeHtml(e.title)}</h3>
                     <p>📅 ${e.date} ${e.time ? '⏰ ' + e.time : ''}</p>
-                    <div class="item-meta">Von: ${e.author}</div>
+                    <div class="item-meta">Von: ${Utils.escapeHtml(e.author)}</div>
                 </div>
             `).join('');
         }
@@ -412,14 +446,7 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; }
             refreshCalendar();
         }
 
-        window.addEventListener('load', () => {
-            loadData();
-            const saved = localStorage.getItem('studyhub_user');
-            if (saved && data.users[saved]) {
-                currentUser = saved;
-                showApp();
-            }
-        });
+        window.addEventListener('load', initApp);
     </script>
 </body>
 </html>
