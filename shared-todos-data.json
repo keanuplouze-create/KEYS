@@ -1,0 +1,11 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "author": "Admin",
+      "title": "Willkommen bei Shared To-Do! 👋",
+      "completed": false,
+      "date": "2026-04-05 10:00"
+    }
+  ]
+}
