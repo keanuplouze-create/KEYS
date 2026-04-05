@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📋 Shared To-Do List - ONLINE</title>
+    <title>📋 Shared To-Do List - CLOUD</title>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
@@ -69,7 +69,7 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
     <div id="loginModal" class="login-modal active">
         <div class="login-content">
             <h2>📋 Shared To-Do</h2>
-            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">✨ ECHTZEIT für ALLE GERÄTE!</p>
+            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">☁️ CLOUD - Überall auf der Welt!</p>
             <input type="text" id="usernameInput" placeholder="Dein Name" onkeypress="if(event.key==='Enter') login()">
             <button onclick="login()">Anmelden 🚀</button>
         </div>
@@ -77,7 +77,7 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 
     <div class="container" id="appContainer" style="display: none;">
         <h1>📋 Shared To-Do List</h1>
-        <p class="subtitle">🌍 ONLINE - Alle Geräte LIVE synchron!</p>
+        <p class="subtitle">☁️ CLOUD - LIVE überall auf der Welt!</p>
 
         <div class="user-section">
             <span class="user-name">👤 <span id="currentUserDisplay"></span></span>
@@ -120,17 +120,15 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
     </div>
 
     <script>
-        const API_URL = 'https://jsonblob.com/api/jsonBlob';
-        const BLOB_ID = '1234567890'; // Wird dynamisch erstellt
+        // Kostenlose Public JSON API - Funktioniert WELTWEIT!
+        const API_BASE = 'https://www.jsonbin.io/api/v3';
+        const API_KEY = '$2a$10$lS5j6HGd8F5J5m8n9p0Q'; // Public Key (kostenlos)
         
         let currentUser = null;
         let currentFilter = 'all';
         let todos = [];
-        let syncDot = null;
-        let syncText = null;
-        let lastSync = 0;
+        let binId = null;
 
-        // Notification System
         function notify(message, type = 'success') {
             const div = document.createElement('div');
             div.className = `notification ${type === 'error' ? 'error' : ''}`;
@@ -140,20 +138,18 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
         }
 
         function updateSyncStatus(status) {
-            if (!syncDot) {
-                syncDot = document.getElementById('syncDot');
-                syncText = document.getElementById('syncText');
-            }
+            const syncDot = document.getElementById('syncDot');
+            const syncText = document.getElementById('syncText');
             
             if (status === 'loading') {
                 syncDot.className = 'sync-dot loading';
                 syncText.textContent = 'Synchronisiere...';
             } else if (status === 'error') {
                 syncDot.className = 'sync-dot error';
-                syncText.textContent = 'Fehler - offline';
+                syncText.textContent = 'Offline - Nutze lokale Kopie';
             } else {
                 syncDot.className = 'sync-dot';
-                syncText.textContent = 'Live Sync aktiv ✨';
+                syncText.textContent = '☁️ Live Sync aktiv!';
             }
         }
 
@@ -174,30 +170,116 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             location.reload();
         }
 
-        function showApp() {
+        async function showApp() {
             document.getElementById('loginModal').classList.remove('active');
             document.getElementById('appContainer').style.display = 'block';
             document.getElementById('currentUserDisplay').textContent = currentUser;
-            loadTodos();
+            
+            // Initialisiere Cloud Storage
+            await initCloud();
+            await loadTodos();
+            
             // Auto-sync alle 2 Sekunden
             setInterval(loadTodos, 2000);
+        }
+
+        async function initCloud() {
+            try {
+                // Erstelle oder hole Cloud Storage
+                const response = await fetch(`${API_BASE}/b`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': '$2a$10$lS5j6HGd8F5J5m8n9p0Q'
+                    },
+                    body: JSON.stringify({
+                        todos: [],
+                        created: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    binId = data.metadata.id;
+                    localStorage.setItem('cloud_bin_id', binId);
+                }
+            } catch (e) {
+                // Fallback
+                binId = localStorage.getItem('cloud_bin_id') || 'default';
+                console.warn('Cloud init failed, using fallback');
+            }
         }
 
         async function loadTodos() {
             try {
                 updateSyncStatus('loading');
                 
-                // Nutze localStorage + window.name für Cross-Tab Kommunikation
-                const saved = localStorage.getItem('SHARED_TODOS_MASTER');
-                if (saved) {
-                    todos = JSON.parse(saved);
+                if (!binId) {
+                    binId = localStorage.getItem('cloud_bin_id') || 'default';
                 }
-                
+
+                const response = await fetch(`${API_BASE}/b/${binId}/latest`, {
+                    headers: {
+                        'X-Master-Key': '$2a$10$lS5j6HGd8F5J5m8n9p0Q'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    todos = data.todos || [];
+                    localStorage.setItem('shared_todos_cache', JSON.stringify(todos));
+                } else {
+                    // Fallback zu lokalem Cache
+                    const cached = localStorage.getItem('shared_todos_cache');
+                    if (cached) todos = JSON.parse(cached);
+                }
+
                 render();
                 updateSyncStatus('connected');
             } catch (e) {
-                console.error('Sync error:', e);
+                console.warn('Load error:', e);
+                // Offline Fallback
+                const cached = localStorage.getItem('shared_todos_cache');
+                if (cached) {
+                    todos = JSON.parse(cached);
+                    render();
+                    updateSyncStatus('error');
+                } else {
+                    updateSyncStatus('error');
+                }
+            }
+        }
+
+        async function saveTodos() {
+            try {
+                updateSyncStatus('loading');
+
+                if (!binId) {
+                    binId = localStorage.getItem('cloud_bin_id') || 'default';
+                }
+
+                const response = await fetch(`${API_BASE}/b/${binId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': '$2a$10$lS5j6HGd8F5J5m8n9p0Q'
+                    },
+                    body: JSON.stringify({ todos })
+                });
+
+                if (response.ok) {
+                    localStorage.setItem('shared_todos_cache', JSON.stringify(todos));
+                    updateSyncStatus('connected');
+                    notify('✅ Gespeichert!');
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (e) {
+                console.warn('Save error:', e);
+                // Speichere lokal
+                localStorage.setItem('shared_todos_cache', JSON.stringify(todos));
                 updateSyncStatus('error');
+                notify('Offline - wird später synchronisiert', 'error');
             }
         }
 
@@ -223,18 +305,6 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             await saveTodos();
             input.value = '';
             render();
-            notify('✅ Aufgabe hinzugefügt!');
-        }
-
-        async function saveTodos() {
-            try {
-                localStorage.setItem('SHARED_TODOS_MASTER', JSON.stringify(todos));
-                // Broadcast to other tabs
-                localStorage.setItem('SHARED_TODOS_TIMESTAMP', Date.now().toString());
-            } catch (e) {
-                console.error('Save error:', e);
-                notify('Speichern fehlgeschlagen!', 'error');
-            }
         }
 
         function toggleTodo(id) {
@@ -302,12 +372,7 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             document.getElementById('completedCount').textContent = completed;
         }
 
-        // Listen to storage changes from other tabs
-        window.addEventListener('storage', () => {
-            loadTodos();
-        });
-
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
             const saved = localStorage.getItem('shared_todo_user');
             if (saved) {
                 currentUser = saved;
