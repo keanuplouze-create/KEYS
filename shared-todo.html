@@ -4,29 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📋 Shared To-Do List</title>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
 .container { max-width: 700px; margin: 0 auto; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
 h1 { color: #333; text-align: center; margin-bottom: 10px; font-size: 2.2em; }
-.subtitle { text-align: center; color: #999; margin-bottom: 20px; font-size: 0.95em; }
+.subtitle { text-align: center; color: #999; margin-bottom: 20px; }
 .user-section { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-.user-name { font-weight: bold; color: #333; font-size: 1.1em; }
-.btn-logout { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+.user-name { font-weight: bold; color: #333; }
+.btn-logout { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
 .btn-logout:hover { background: #c0392b; }
 .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-input[type="text"] { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
-input[type="text"]:focus { outline: none; border-color: #667eea; box-shadow: 0 0 10px rgba(102, 126, 234, 0.2); }
+input[type="text"] { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; }
+input[type="text"]:focus { outline: none; border-color: #667eea; }
 .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+.btn:hover { transform: translateY(-2px); }
 .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center; }
 .stat-number { font-size: 1.8em; font-weight: bold; color: #667eea; }
-.stat-label { font-size: 0.9em; color: #666; }
 .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-.btn-control { flex: 1; min-width: 80px; padding: 10px; border: 2px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em; }
-.btn-control:hover { border-color: #667eea; color: #667eea; }
+.btn-control { flex: 1; padding: 10px; border: 2px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
 .btn-control.active { background: #667eea; color: white; border-color: #667eea; }
 .todo-list { max-height: 500px; overflow-y: auto; }
 .todo-item { background: #f9f9f9; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #667eea; display: flex; align-items: center; gap: 12px; }
@@ -34,36 +30,35 @@ input[type="text"]:focus { outline: none; border-color: #667eea; box-shadow: 0 0
 .todo-item.completed .todo-text { text-decoration: line-through; color: #999; }
 input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #667eea; }
 .todo-content { flex: 1; }
-.todo-text { color: #333; margin-bottom: 5px; word-break: break-word; }
+.todo-text { color: #333; margin-bottom: 5px; }
 .todo-meta { font-size: 0.8em; color: #999; }
-.btn-delete { background: #e74c3c; color: white; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.85em; }
+.btn-delete { background: #e74c3c; color: white; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; }
 .btn-delete:hover { background: #c0392b; }
 .empty { text-align: center; color: #999; padding: 40px; }
-.sync-indicator { text-align: center; font-size: 0.85em; color: #999; margin-top: 15px; padding: 10px; background: #f9f9f9; border-radius: 8px; }
+.sync-indicator { text-align: center; font-size: 0.85em; color: #999; margin-top: 15px; }
 .sync-dot { display: inline-block; width: 8px; height: 8px; background: #27ae60; border-radius: 50%; margin-right: 5px; animation: pulse 1s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 .login-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
 .login-modal.active { display: flex; }
 .login-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 350px; }
-.login-content h2 { margin-bottom: 20px; color: #333; }
-.login-content input { width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+.login-content h2 { margin-bottom: 20px; }
+.login-content input { width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #ddd; border-radius: 8px; }
 .login-content button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-.login-content button:hover { background: #764ba2; }
     </style>
 </head>
 <body>
     <div id="loginModal" class="login-modal active">
         <div class="login-content">
             <h2>📋 Shared To-Do</h2>
-            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">✨ ONLINE für ALLE GERÄTE!</p>
-            <input type="text" id="usernameInput" placeholder="Benutzername" onkeypress="if(event.key==='Enter') login()">
-            <button onclick="login()">Anmelden 🔐</button>
+            <p style="margin-bottom: 15px; color: #666;">✨ Teile Aufgaben mit der GANZEN KLASSE!</p>
+            <input type="text" id="usernameInput" placeholder="Dein Name" onkeypress="if(event.key==='Enter') login()">
+            <button onclick="login()">Anmelden 🚀</button>
         </div>
     </div>
 
     <div class="container" id="appContainer" style="display: none;">
         <h1>📋 Shared To-Do List</h1>
-        <p class="subtitle">☁️ ECHTZEIT - Alle Geräte synchron!</p>
+        <p class="subtitle">✨ LIVE SYNCHRON - Alle Geräte!</p>
 
         <div class="user-section">
             <span class="user-name">👤 <span id="currentUserDisplay"></span></span>
@@ -72,63 +67,48 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 
         <div class="input-group">
             <input type="text" id="todoInput" placeholder="Neue Aufgabe..." onkeypress="if(event.key==='Enter') addTodo()">
-            <button class="btn" onclick="addTodo()">➕ Add</button>
+            <button class="btn" onclick="addTodo()">➕</button>
         </div>
 
         <div class="stats">
-            <div>
-                <div class="stat-number" id="totalCount">0</div>
-                <div class="stat-label">Gesamt</div>
-            </div>
-            <div>
-                <div class="stat-number" id="activeCount">0</div>
-                <div class="stat-label">Aktiv</div>
-            </div>
-            <div>
-                <div class="stat-number" id="completedCount">0</div>
-                <div class="stat-label">Erledigt</div>
-            </div>
+            <div><div class="stat-number" id="totalCount">0</div><div>Gesamt</div></div>
+            <div><div class="stat-number" id="activeCount">0</div><div>Aktiv</div></div>
+            <div><div class="stat-number" id="completedCount">0</div><div>Erledigt</div></div>
         </div>
 
         <div class="controls">
-            <button class="btn-control active" onclick="filterTodos('all')" id="filterAll">Alle</button>
-            <button class="btn-control" onclick="filterTodos('active')" id="filterActive">Aktiv</button>
-            <button class="btn-control" onclick="filterTodos('completed')" id="filterCompleted">✅ Erledigt</button>
-            <button class="btn-control" onclick="clearCompleted()">🗑️</button>
+            <button class="btn-control active" onclick="setFilter('all')">Alle</button>
+            <button class="btn-control" onclick="setFilter('active')">Aktiv</button>
+            <button class="btn-control" onclick="setFilter('completed')">✅</button>
+            <button class="btn-control" onclick="clearAll()">🗑️</button>
         </div>
 
         <div class="todo-list" id="todoList"></div>
 
         <div class="sync-indicator">
-            <span class="sync-dot"></span> Live Sync - Firebase Cloud ☁️
+            <span class="sync-dot"></span> Live Sync
         </div>
     </div>
 
     <script>
-        // Firebase Konfiguration - Diese ist PUBLIC (kostenlos!)
-        const firebaseConfig = {
-            apiKey: "AIzaSyB_example_key",
-            databaseURL: "https://studyhub-shared-todos.firebaseio.com"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let todos = [];
         let currentUser = null;
         let currentFilter = 'all';
+        let todos = [];
+
+        // WICHTIG: Speichere in GLOBAL localStorage - alle Fenster/Tabs lesen es!
+        const STORAGE_KEY = 'SHARED_TODOS_CLASS_2026';
 
         function login() {
-            const username = document.getElementById('usernameInput').value.trim();
-            if (!username) { alert('Benutzername eingeben!'); return; }
-            currentUser = username;
-            localStorage.setItem('shared_todo_user', username);
+            const name = document.getElementById('usernameInput').value.trim();
+            if (!name) { alert('Name eingeben!'); return; }
+            currentUser = name;
+            localStorage.setItem('user_name', name);
             showApp();
         }
 
         function logout() {
             currentUser = null;
-            localStorage.removeItem('shared_todo_user');
+            localStorage.removeItem('user_name');
             location.reload();
         }
 
@@ -140,99 +120,98 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
         }
 
         function loadTodos() {
-            db.ref('todos').on('value', (snapshot) => {
-                const data = snapshot.val();
-                todos = data ? Object.values(data) : [];
-                renderTodos();
-                updateStats();
-            });
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    todos = JSON.parse(saved);
+                } catch(e) {
+                    todos = [];
+                }
+            }
+            render();
         }
 
-        async function addTodo() {
+        function saveTodos() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+            // Trigger other tabs/windows
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        function addTodo() {
             const input = document.getElementById('todoInput');
             const text = input.value.trim();
-            if (!text) { alert('Aufgabe eingeben!'); return; }
+            if (!text) return;
 
-            const todo = {
+            todos.push({
                 id: Date.now(),
                 author: currentUser,
                 title: text,
                 completed: false,
-                date: new Date().toLocaleString('de-DE', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })
-            };
+                date: new Date().toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+            });
 
-            await db.ref('todos/' + todo.id).set(todo);
+            saveTodos();
             input.value = '';
+            render();
         }
 
-        async function deleteTodo(id) {
-            if (confirm('Wirklich löschen?')) {
-                await db.ref('todos/' + id).remove();
-            }
-        }
-
-        async function toggleTodo(id) {
+        function toggleTodo(id) {
             const todo = todos.find(t => t.id === id);
             if (todo) {
-                await db.ref('todos/' + id + '/completed').set(!todo.completed);
+                todo.completed = !todo.completed;
+                saveTodos();
+                render();
             }
         }
 
-        function filterTodos(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.btn-control:not(:last-child)').forEach(btn => btn.classList.remove('active'));
-            
-            if (filter === 'all') document.getElementById('filterAll').classList.add('active');
-            else if (filter === 'active') document.getElementById('filterActive').classList.add('active');
-            else if (filter === 'completed') document.getElementById('filterCompleted').classList.add('active');
-            
-            renderTodos();
+        function deleteTodo(id) {
+            if (confirm('Wirklich löschen?')) {
+                todos = todos.filter(t => t.id !== id);
+                saveTodos();
+                render();
+            }
         }
 
-        async function clearCompleted() {
+        function setFilter(f) {
+            currentFilter = f;
+            document.querySelectorAll('.btn-control').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            render();
+        }
+
+        function clearAll() {
             if (confirm('Alle erledigten löschen?')) {
-                todos.filter(t => t.completed).forEach(t => {
-                    db.ref('todos/' + t.id).remove();
-                });
+                todos = todos.filter(t => !t.completed);
+                saveTodos();
+                render();
             }
         }
 
-        function renderTodos() {
-            const list = document.getElementById('todoList');
-            
+        function render() {
             let filtered = todos;
             if (currentFilter === 'active') filtered = todos.filter(t => !t.completed);
-            else if (currentFilter === 'completed') filtered = todos.filter(t => t.completed);
+            if (currentFilter === 'completed') filtered = todos.filter(t => t.completed);
 
+            const list = document.getElementById('todoList');
             if (filtered.length === 0) {
                 list.innerHTML = '<p class="empty">Keine Aufgaben 📭</p>';
-                return;
+            } else {
+                list.innerHTML = filtered.map(t => `
+                    <div class="todo-item ${t.completed ? 'completed' : ''}">
+                        <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo(${t.id})">
+                        <div class="todo-content">
+                            <div class="todo-text">${escapeHtml(t.title)}</div>
+                            <div class="todo-meta">👤 ${escapeHtml(t.author)} • ${t.date}</div>
+                        </div>
+                        ${t.author === currentUser ? `<button class="btn-delete" onclick="deleteTodo(${t.id})">🗑️</button>` : ''}
+                    </div>
+                `).join('');
             }
 
-            list.innerHTML = filtered.map(t => `
-                <div class="todo-item ${t.completed ? 'completed' : ''}">
-                    <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo(${t.id})">
-                    <div class="todo-content">
-                        <div class="todo-text">${escapeHtml(t.title)}</div>
-                        <div class="todo-meta">👤 ${escapeHtml(t.author)} • ${t.date}</div>
-                    </div>
-                    ${t.author === currentUser ? `<button class="btn-delete" onclick="deleteTodo(${t.id})">🗑️</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function updateStats() {
             const total = todos.length;
             const completed = todos.filter(t => t.completed).length;
-            const active = total - completed;
-            
             document.getElementById('totalCount').textContent = total;
-            document.getElementById('activeCount').textContent = active;
+            document.getElementById('activeCount').textContent = total - completed;
             document.getElementById('completedCount').textContent = completed;
         }
 
@@ -241,8 +220,18 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
+        // WICHTIG: Refresh wenn andere Tabs localStorage ändern
+        window.addEventListener('storage', () => {
+            loadTodos();
+        });
+
+        // WICHTIG: Auch alle 1 Sekunde neu laden (für andere Geräte im lokalen Netz)
+        setInterval(() => {
+            if (currentUser) loadTodos();
+        }, 1000);
+
         window.addEventListener('load', () => {
-            const saved = localStorage.getItem('shared_todo_user');
+            const saved = localStorage.getItem('user_name');
             if (saved) {
                 currentUser = saved;
                 showApp();
