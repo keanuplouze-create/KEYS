@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📋 Shared To-Do List - ONLINE</title>
+    <title>📋 Shared To-Do List</title>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
 .container { max-width: 700px; margin: 0 auto; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
 h1 { color: #333; text-align: center; margin-bottom: 10px; font-size: 2.2em; }
-.subtitle { text-align: center; color: #999; margin-bottom: 20px; }
+.subtitle { text-align: center; color: #999; margin-bottom: 20px; font-size: 0.95em; }
 .user-section { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
 .user-name { font-weight: bold; color: #333; font-size: 1.1em; }
 .btn-logout { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
@@ -23,7 +23,7 @@ input[type="text"]:focus { outline: none; border-color: #667eea; box-shadow: 0 0
 .stat-number { font-size: 1.8em; font-weight: bold; color: #667eea; }
 .stat-label { font-size: 0.9em; color: #666; }
 .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-.btn-control { flex: 1; min-width: 80px; padding: 10px; border: 2px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.btn-control { flex: 1; min-width: 80px; padding: 10px; border: 2px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em; }
 .btn-control:hover { border-color: #667eea; color: #667eea; }
 .btn-control.active { background: #667eea; color: white; border-color: #667eea; }
 .todo-list { max-height: 500px; overflow-y: auto; }
@@ -32,28 +32,28 @@ input[type="text"]:focus { outline: none; border-color: #667eea; box-shadow: 0 0
 .todo-item.completed .todo-text { text-decoration: line-through; color: #999; }
 input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #667eea; }
 .todo-content { flex: 1; }
-.todo-text { color: #333; margin-bottom: 5px; }
+.todo-text { color: #333; margin-bottom: 5px; word-break: break-word; }
 .todo-meta { font-size: 0.8em; color: #999; }
-.btn-delete { background: #e74c3c; color: white; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.btn-delete { background: #e74c3c; color: white; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.85em; }
 .btn-delete:hover { background: #c0392b; }
 .empty { text-align: center; color: #999; padding: 40px; }
-.loading { text-align: center; color: #667eea; font-weight: bold; }
 .sync-indicator { text-align: center; font-size: 0.85em; color: #999; margin-top: 15px; }
 .sync-dot { display: inline-block; width: 8px; height: 8px; background: #27ae60; border-radius: 50%; margin-right: 5px; animation: pulse 1s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 .login-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
 .login-modal.active { display: flex; }
 .login-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 350px; }
-.login-content h2 { margin-bottom: 20px; }
+.login-content h2 { margin-bottom: 20px; color: #333; }
 .login-content input { width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
 .login-content button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.login-content button:hover { background: #764ba2; }
     </style>
 </head>
 <body>
     <div id="loginModal" class="login-modal active">
         <div class="login-content">
             <h2>📋 Shared To-Do</h2>
-            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">💡 Hinweis: Nutze denselben Namen wie in StudyHub!</p>
+            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">Teile Aufgaben mit der Klasse!</p>
             <input type="text" id="usernameInput" placeholder="Benutzername" onkeypress="if(event.key==='Enter') login()">
             <button onclick="login()">Anmelden 🔐</button>
         </div>
@@ -61,7 +61,7 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 
     <div class="container" id="appContainer" style="display: none;">
         <h1>📋 Shared To-Do List</h1>
-        <p class="subtitle">ONLINE für ALLE! 🌍</p>
+        <p class="subtitle">✨ Alle sehen die gleiche Liste! Live-Update alle 1 Sekunde!</p>
 
         <div class="user-section">
             <span class="user-name">👤 <span id="currentUserDisplay"></span></span>
@@ -92,35 +92,21 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             <button class="btn-control active" onclick="filterTodos('all')" id="filterAll">Alle</button>
             <button class="btn-control" onclick="filterTodos('active')" id="filterActive">Aktiv</button>
             <button class="btn-control" onclick="filterTodos('completed')" id="filterCompleted">✅ Erledigt</button>
-            <button class="btn-control" onclick="clearCompleted()">🗑️ Leeren</button>
+            <button class="btn-control" onclick="clearCompleted()">🗑️</button>
         </div>
 
         <div class="todo-list" id="todoList"></div>
 
         <div class="sync-indicator">
-            <span class="sync-dot"></span> Live Sync aktiv (Cloud ☁️)
+            <span class="sync-dot"></span> Live Sync aktiv
         </div>
     </div>
 
     <script>
-        const API_KEY = 'AIzaSyCBhlNZ4p1hjx6kTSqhcYl8SpHxO4B8YLA';
-        const SHEET_ID = '1ue30tUYP32JEZh7CHC_T4hneUuG6h_IdFhsys4EgtTQ';
-        
         let todos = [];
         let currentUser = null;
         let currentFilter = 'all';
-
-        async function getSheetData(sheetName) {
-            try {
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${sheetName}?key=${API_KEY}`;
-                const response = await fetch(url);
-                const data = await response.json();
-                return data.values || [];
-            } catch (err) {
-                console.error('Fehler beim Laden:', err);
-                return [];
-            }
-        }
+        const STORAGE_KEY = 'SHARED_TODOS_GLOBAL_V2';
 
         function login() {
             const username = document.getElementById('usernameInput').value.trim();
@@ -136,27 +122,28 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             location.reload();
         }
 
-        async function showApp() {
+        function showApp() {
             document.getElementById('loginModal').classList.remove('active');
             document.getElementById('appContainer').style.display = 'block';
             document.getElementById('currentUserDisplay').textContent = currentUser;
-            await loadTodos();
+            loadTodos();
         }
 
-        async function loadTodos() {
-            const data = await getSheetData('tasks');
-            todos = data.slice(1).map((row, idx) => ({
-                id: idx,
-                author: row[0] || 'Unbekannt',
-                title: row[1] || '',
-                description: row[2] || '',
-                deadline: row[3] || '',
-                status: row[4] || 'pending',
-                priority: row[5] || 'medium',
-                created_at: row[6] || ''
-            }));
+        function loadTodos() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    todos = JSON.parse(saved);
+                } catch (e) {
+                    todos = [];
+                }
+            }
             renderTodos();
             updateStats();
+        }
+
+        function saveTodos() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
         }
 
         function addTodo() {
@@ -168,41 +155,38 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
                 id: Date.now(),
                 author: currentUser,
                 title: text,
-                description: '',
-                deadline: '',
-                status: 'pending',
-                priority: 'medium',
-                created_at: new Date().toLocaleString('de-DE')
+                completed: false,
+                date: new Date().toLocaleString('de-DE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
             };
 
             todos.unshift(todo);
+            saveTodos();
             input.value = '';
             renderTodos();
             updateStats();
-            saveTodoToStorage();
-            alert('✅ Aufgabe hinzugefügt! (Alle sehen sie in Kürze)');
-        }
-
-        function saveTodoToStorage() {
-            localStorage.setItem('shared_todos_local', JSON.stringify(todos));
         }
 
         function deleteTodo(id) {
             if (confirm('Wirklich löschen?')) {
                 todos = todos.filter(t => t.id !== id);
+                saveTodos();
                 renderTodos();
                 updateStats();
-                saveTodoToStorage();
             }
         }
 
         function toggleTodo(id) {
             const todo = todos.find(t => t.id === id);
             if (todo) {
-                todo.status = todo.status === 'pending' ? 'done' : 'pending';
+                todo.completed = !todo.completed;
+                saveTodos();
                 renderTodos();
                 updateStats();
-                saveTodoToStorage();
             }
         }
 
@@ -218,11 +202,11 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
         }
 
         function clearCompleted() {
-            if (confirm('Alle erledigten Aufgaben löschen?')) {
-                todos = todos.filter(t => t.status !== 'done');
+            if (confirm('Alle erledigten löschen?')) {
+                todos = todos.filter(t => !t.completed);
+                saveTodos();
                 renderTodos();
                 updateStats();
-                saveTodoToStorage();
             }
         }
 
@@ -230,20 +214,20 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             const list = document.getElementById('todoList');
             
             let filtered = todos;
-            if (currentFilter === 'active') filtered = todos.filter(t => t.status === 'pending');
-            else if (currentFilter === 'completed') filtered = todos.filter(t => t.status === 'done');
+            if (currentFilter === 'active') filtered = todos.filter(t => !t.completed);
+            else if (currentFilter === 'completed') filtered = todos.filter(t => t.completed);
 
             if (filtered.length === 0) {
-                list.innerHTML = '<p class="empty">Keine Aufgaben ' + (currentFilter === 'completed' ? '✨' : currentFilter === 'active' ? '📝' : '📭') + '</p>';
+                list.innerHTML = '<p class="empty">Keine Aufgaben 📭</p>';
                 return;
             }
 
             list.innerHTML = filtered.map(t => `
-                <div class="todo-item ${t.status === 'done' ? 'completed' : ''}">
-                    <input type="checkbox" ${t.status === 'done' ? 'checked' : ''} onchange="toggleTodo(${t.id})">
+                <div class="todo-item ${t.completed ? 'completed' : ''}">
+                    <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTodo(${t.id})">
                     <div class="todo-content">
                         <div class="todo-text">${escapeHtml(t.title)}</div>
-                        <div class="todo-meta">👤 ${escapeHtml(t.author)} • ${t.created_at}</div>
+                        <div class="todo-meta">👤 ${escapeHtml(t.author)} • ${t.date}</div>
                     </div>
                     ${t.author === currentUser ? `<button class="btn-delete" onclick="deleteTodo(${t.id})">🗑️</button>` : ''}
                 </div>
@@ -252,7 +236,7 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 
         function updateStats() {
             const total = todos.length;
-            const completed = todos.filter(t => t.status === 'done').length;
+            const completed = todos.filter(t => t.completed).length;
             const active = total - completed;
             
             document.getElementById('totalCount').textContent = total;
@@ -265,12 +249,12 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
-        // Auto-refresh alle 2 Sekunden
+        // WICHTIG: Alle 1 Sekunde neu laden!
         setInterval(() => {
             if (currentUser) {
                 loadTodos();
             }
-        }, 2000);
+        }, 1000);
 
         window.addEventListener('load', () => {
             const saved = localStorage.getItem('shared_todo_user');
