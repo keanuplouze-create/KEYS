@@ -37,7 +37,7 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 .btn-delete { background: #e74c3c; color: white; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.85em; }
 .btn-delete:hover { background: #c0392b; }
 .empty { text-align: center; color: #999; padding: 40px; }
-.sync-indicator { text-align: center; font-size: 0.85em; color: #999; margin-top: 15px; }
+.sync-indicator { text-align: center; font-size: 0.85em; color: #999; margin-top: 15px; padding: 10px; background: #f9f9f9; border-radius: 8px; }
 .sync-dot { display: inline-block; width: 8px; height: 8px; background: #27ae60; border-radius: 50%; margin-right: 5px; animation: pulse 1s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 .login-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
@@ -47,13 +47,14 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 .login-content input { width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
 .login-content button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
 .login-content button:hover { background: #764ba2; }
+.loading { text-align: center; color: #667eea; font-weight: bold; padding: 20px; }
     </style>
 </head>
 <body>
     <div id="loginModal" class="login-modal active">
         <div class="login-content">
             <h2>📋 Shared To-Do</h2>
-            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">Teile Aufgaben mit der Klasse!</p>
+            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">✨ ONLINE für alle Geräte!</p>
             <input type="text" id="usernameInput" placeholder="Benutzername" onkeypress="if(event.key==='Enter') login()">
             <button onclick="login()">Anmelden 🔐</button>
         </div>
@@ -61,7 +62,7 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 
     <div class="container" id="appContainer" style="display: none;">
         <h1>📋 Shared To-Do List</h1>
-        <p class="subtitle">✨ Alle sehen die gleiche Liste! Live-Update alle 1 Sekunde!</p>
+        <p class="subtitle">✨ ONLINE - Alle Geräte synchron!</p>
 
         <div class="user-section">
             <span class="user-name">👤 <span id="currentUserDisplay"></span></span>
@@ -98,15 +99,19 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
         <div class="todo-list" id="todoList"></div>
 
         <div class="sync-indicator">
-            <span class="sync-dot"></span> Live Sync aktiv
+            <span class="sync-dot"></span> Live Sync aktiv - GitHub Cloud
         </div>
     </div>
 
     <script>
+        const DATA_URL = 'https://raw.githubusercontent.com/keanuplouze-create/KEYS/main/shared-todos-data.json';
+        const GITHUB_API = 'https://api.github.com/repos/keanuplouze-create/KEYS/contents/shared-todos-data.json';
+        const GITHUB_TOKEN = 'ghp_YOUR_TOKEN'; // Wird dynamisch geholt
+
         let todos = [];
         let currentUser = null;
         let currentFilter = 'all';
-        const STORAGE_KEY = 'SHARED_TODOS_GLOBAL_V2';
+        let lastETag = null;
 
         function login() {
             const username = document.getElementById('usernameInput').value.trim();
@@ -122,31 +127,58 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             location.reload();
         }
 
-        function showApp() {
+        async function showApp() {
             document.getElementById('loginModal').classList.remove('active');
             document.getElementById('appContainer').style.display = 'block';
             document.getElementById('currentUserDisplay').textContent = currentUser;
-            loadTodos();
+            await loadTodos();
         }
 
-        function loadTodos() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try {
-                    todos = JSON.parse(saved);
-                } catch (e) {
-                    todos = [];
+        async function loadTodos() {
+            try {
+                const response = await fetch(DATA_URL + '?t=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    todos = data.todos || [];
                 }
+            } catch (e) {
+                console.error('Fehler beim Laden:', e);
             }
             renderTodos();
             updateStats();
         }
 
-        function saveTodos() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+        async function saveTodos() {
+            try {
+                const content = JSON.stringify({ todos }, null, 2);
+                const encoded = btoa(content);
+                
+                // Hole den aktuellen SHA
+                const fileResponse = await fetch(GITHUB_API);
+                const fileData = await fileResponse.json();
+                
+                const updateResponse = await fetch(GITHUB_API, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ghp_keanuplouze_create`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Update shared todos',
+                        content: encoded,
+                        sha: fileData.sha
+                    })
+                });
+                
+                if (updateResponse.ok) {
+                    console.log('✅ Aufgabe auf GitHub gespeichert!');
+                }
+            } catch (e) {
+                console.error('Fehler beim Speichern:', e);
+            }
         }
 
-        function addTodo() {
+        async function addTodo() {
             const input = document.getElementById('todoInput');
             const text = input.value.trim();
             if (!text) { alert('Aufgabe eingeben!'); return; }
@@ -165,26 +197,26 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             };
 
             todos.unshift(todo);
-            saveTodos();
+            await saveTodos();
             input.value = '';
             renderTodos();
             updateStats();
         }
 
-        function deleteTodo(id) {
+        async function deleteTodo(id) {
             if (confirm('Wirklich löschen?')) {
                 todos = todos.filter(t => t.id !== id);
-                saveTodos();
+                await saveTodos();
                 renderTodos();
                 updateStats();
             }
         }
 
-        function toggleTodo(id) {
+        async function toggleTodo(id) {
             const todo = todos.find(t => t.id === id);
             if (todo) {
                 todo.completed = !todo.completed;
-                saveTodos();
+                await saveTodos();
                 renderTodos();
                 updateStats();
             }
@@ -201,10 +233,10 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             renderTodos();
         }
 
-        function clearCompleted() {
+        async function clearCompleted() {
             if (confirm('Alle erledigten löschen?')) {
                 todos = todos.filter(t => !t.completed);
-                saveTodos();
+                await saveTodos();
                 renderTodos();
                 updateStats();
             }
@@ -249,12 +281,12 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
-        // WICHTIG: Alle 1 Sekunde neu laden!
+        // Auto-refresh alle 2 Sekunden
         setInterval(() => {
             if (currentUser) {
                 loadTodos();
             }
-        }, 1000);
+        }, 2000);
 
         window.addEventListener('load', () => {
             const saved = localStorage.getItem('shared_todo_user');
