@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📋 Shared To-Do List</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
     <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
@@ -47,14 +49,13 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 .login-content input { width: 100%; padding: 12px; margin-bottom: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
 .login-content button { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
 .login-content button:hover { background: #764ba2; }
-.loading { text-align: center; color: #667eea; font-weight: bold; padding: 20px; }
     </style>
 </head>
 <body>
     <div id="loginModal" class="login-modal active">
         <div class="login-content">
             <h2>📋 Shared To-Do</h2>
-            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">✨ ONLINE für alle Geräte!</p>
+            <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">✨ ONLINE für ALLE GERÄTE!</p>
             <input type="text" id="usernameInput" placeholder="Benutzername" onkeypress="if(event.key==='Enter') login()">
             <button onclick="login()">Anmelden 🔐</button>
         </div>
@@ -62,7 +63,7 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 
     <div class="container" id="appContainer" style="display: none;">
         <h1>📋 Shared To-Do List</h1>
-        <p class="subtitle">✨ ONLINE - Alle Geräte synchron!</p>
+        <p class="subtitle">☁️ ECHTZEIT - Alle Geräte synchron!</p>
 
         <div class="user-section">
             <span class="user-name">👤 <span id="currentUserDisplay"></span></span>
@@ -99,19 +100,23 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
         <div class="todo-list" id="todoList"></div>
 
         <div class="sync-indicator">
-            <span class="sync-dot"></span> Live Sync aktiv - GitHub Cloud
+            <span class="sync-dot"></span> Live Sync - Firebase Cloud ☁️
         </div>
     </div>
 
     <script>
-        const DATA_URL = 'https://raw.githubusercontent.com/keanuplouze-create/KEYS/main/shared-todos-data.json';
-        const GITHUB_API = 'https://api.github.com/repos/keanuplouze-create/KEYS/contents/shared-todos-data.json';
-        const GITHUB_TOKEN = 'ghp_YOUR_TOKEN'; // Wird dynamisch geholt
+        // Firebase Konfiguration - Diese ist PUBLIC (kostenlos!)
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_example_key",
+            databaseURL: "https://studyhub-shared-todos.firebaseio.com"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         let todos = [];
         let currentUser = null;
         let currentFilter = 'all';
-        let lastETag = null;
 
         function login() {
             const username = document.getElementById('usernameInput').value.trim();
@@ -127,55 +132,20 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             location.reload();
         }
 
-        async function showApp() {
+        function showApp() {
             document.getElementById('loginModal').classList.remove('active');
             document.getElementById('appContainer').style.display = 'block';
             document.getElementById('currentUserDisplay').textContent = currentUser;
-            await loadTodos();
+            loadTodos();
         }
 
-        async function loadTodos() {
-            try {
-                const response = await fetch(DATA_URL + '?t=' + Date.now());
-                if (response.ok) {
-                    const data = await response.json();
-                    todos = data.todos || [];
-                }
-            } catch (e) {
-                console.error('Fehler beim Laden:', e);
-            }
-            renderTodos();
-            updateStats();
-        }
-
-        async function saveTodos() {
-            try {
-                const content = JSON.stringify({ todos }, null, 2);
-                const encoded = btoa(content);
-                
-                // Hole den aktuellen SHA
-                const fileResponse = await fetch(GITHUB_API);
-                const fileData = await fileResponse.json();
-                
-                const updateResponse = await fetch(GITHUB_API, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ghp_keanuplouze_create`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: 'Update shared todos',
-                        content: encoded,
-                        sha: fileData.sha
-                    })
-                });
-                
-                if (updateResponse.ok) {
-                    console.log('✅ Aufgabe auf GitHub gespeichert!');
-                }
-            } catch (e) {
-                console.error('Fehler beim Speichern:', e);
-            }
+        function loadTodos() {
+            db.ref('todos').on('value', (snapshot) => {
+                const data = snapshot.val();
+                todos = data ? Object.values(data) : [];
+                renderTodos();
+                updateStats();
+            });
         }
 
         async function addTodo() {
@@ -196,29 +166,20 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
                 })
             };
 
-            todos.unshift(todo);
-            await saveTodos();
+            await db.ref('todos/' + todo.id).set(todo);
             input.value = '';
-            renderTodos();
-            updateStats();
         }
 
         async function deleteTodo(id) {
             if (confirm('Wirklich löschen?')) {
-                todos = todos.filter(t => t.id !== id);
-                await saveTodos();
-                renderTodos();
-                updateStats();
+                await db.ref('todos/' + id).remove();
             }
         }
 
         async function toggleTodo(id) {
             const todo = todos.find(t => t.id === id);
             if (todo) {
-                todo.completed = !todo.completed;
-                await saveTodos();
-                renderTodos();
-                updateStats();
+                await db.ref('todos/' + id + '/completed').set(!todo.completed);
             }
         }
 
@@ -235,10 +196,9 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
 
         async function clearCompleted() {
             if (confirm('Alle erledigten löschen?')) {
-                todos = todos.filter(t => !t.completed);
-                await saveTodos();
-                renderTodos();
-                updateStats();
+                todos.filter(t => t.completed).forEach(t => {
+                    db.ref('todos/' + t.id).remove();
+                });
             }
         }
 
@@ -280,13 +240,6 @@ input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-colo
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
             return text.replace(/[&<>"']/g, m => map[m]);
         }
-
-        // Auto-refresh alle 2 Sekunden
-        setInterval(() => {
-            if (currentUser) {
-                loadTodos();
-            }
-        }, 2000);
 
         window.addEventListener('load', () => {
             const saved = localStorage.getItem('shared_todo_user');
