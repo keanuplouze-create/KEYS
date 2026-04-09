@@ -74,26 +74,26 @@ footer { background: #2c3e50; color: white; text-align: center; padding: 15px; m
     <div id="authModal" class="modal active">
         <div class="modal-content">
             <h2>📚 StudyHub</h2>
-            <div id="loginForm">
+            <form id="loginForm" onsubmit="login(); return false;">
                 <h3>Anmelden</h3>
-                <input type="text" id="loginUsername" placeholder="Benutzername">
-                <input type="password" id="loginPassword" placeholder="Passwort">
-                <button onclick="login()">Anmelden</button>
+                <input type="text" id="loginUsername" placeholder="Benutzername" autocomplete="username">
+                <input type="password" id="loginPassword" placeholder="Passwort" autocomplete="current-password">
+                <button type="submit">Anmelden</button>
                 <div class="modal-toggle">
                     Kein Konto? <a onclick="switchToRegister()">Registrieren</a>
                 </div>
-            </div>
-            <div id="registerForm" style="display: none;">
+            </form>
+            <form id="registerForm" style="display: none;" onsubmit="register(); return false;">
                 <h3>Registrieren</h3>
-                <input type="text" id="regUsername" placeholder="Benutzername">
-                <input type="email" id="regEmail" placeholder="E-Mail">
-                <input type="password" id="regPassword" placeholder="Passwort">
-                <input type="password" id="regPassword2" placeholder="Passwort wiederholen">
-                <button onclick="register()">Registrieren</button>
+                <input type="text" id="regUsername" placeholder="Benutzername" autocomplete="username">
+                <input type="email" id="regEmail" placeholder="E-Mail" autocomplete="email">
+                <input type="password" id="regPassword" placeholder="Passwort" autocomplete="new-password">
+                <input type="password" id="regPassword2" placeholder="Passwort wiederholen" autocomplete="new-password">
+                <button type="submit">Registrieren</button>
                 <div class="modal-toggle">
                     Bereits registriert? <a onclick="switchToLogin()">Anmelden</a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
